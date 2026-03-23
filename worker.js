@@ -50,7 +50,7 @@ const SPACES_DATA = [
     sqft: 62, active: true
   },
   {
-    id: "7", number: 7, name: "Booth - Ruby", type: "small",
+    id: "7", number: 7, name: "Suite - Scarlet", type: "large",
     location: "Building A, Floor 1 · Bay 7 (North Wing)",
     description: "High-energy space with premium lighting setup — a favorite for jewelers, photographers, and visual artists.",
     amenities: ["High-Speed WiFi", "3 Power Outlets", "Studio-Grade Lighting", "Lockable Storage", "Display Hooks"],
@@ -71,7 +71,7 @@ const SPACES_DATA = [
     sqft: 68, active: true
   },
   {
-    id: "10", number: 10, name: "Booth - Coral", type: "small",
+    id: "10", number: 10, name: "Suite - Azure", type: "large",
     location: "Building A, Floor 2 · Bay 1 (South Wing)",
     description: "Vibrant and welcoming second-floor booth with great visibility from the mezzanine.",
     amenities: ["High-Speed WiFi", "2 Power Outlets", "Warm LED Lighting", "Storage Shelf", "Mezzanine View"],
@@ -192,14 +192,14 @@ const SPACES_DATA = [
 
   // ── Premium Booths 27–28 ──
   {
-    id: "27", number: 27, name: "Suite - Scarlet", type: "large",
+    id: "27", number: 27, name: "Booth - Scarlet", type: "small",
     location: "Building B, Main Floor · Suite 1",
     description: "Expansive premium suite with full display wall, counter space, and meeting area. Ideal for established businesses, pop-up shops, and product launches.",
     amenities: ["High-Speed WiFi", "8 Power Outlets", "Studio-Grade Lighting", "Large Storage Cabinet", "Full Display Wall", "Counter Space", "Meeting Table + 4 Chairs", "Mini Fridge", "Climate Control"],
     sqft: 180, active: true
   },
   {
-    id: "28", number: 28, name: "Suite - Azure", type: "large",
+    id: "28", number: 28, name: "Booth - Azure", type: "small",
     location: "Building B, Main Floor · Suite 2",
     description: "The pinnacle of our booth offerings. Premium finishes, professional lighting, double-sided display, and maximum visibility from the main corridor.",
     amenities: ["High-Speed WiFi", "8 Power Outlets", "Premium Track Lighting", "Locking Storage Cabinet", "Full Display System", "Counter Space", "Whiteboard", "Mini Fridge", "Sink Access", "Climate Control"],

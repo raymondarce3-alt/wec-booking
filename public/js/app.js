@@ -8,7 +8,7 @@ const API_BASE = (() => {
   if (host === 'localhost' || host === '127.0.0.1') {
     return 'http://localhost:8787';
   }
-  return 'https://wec-booking.raymondarce3.workers.dev';
+  return 'https://wec-booking.ray-3bd.workers.dev';
 })();
 
 // ─── API Helpers ──────────────────────────────────────────────────────────────
