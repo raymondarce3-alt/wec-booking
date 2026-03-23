@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Availability Calendar — Women's Empowerment Center™</title>
+  <meta name="description" content="Check space availability at the Women's Empowerment Center™. Monthly calendar view showing booked, pending, and available dates.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .cal-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 28px;
+      align-items: start;
+    }
+    @media (max-width: 960px) {
+      .cal-layout { grid-template-columns: 1fr; }
+    }
+
+    .cal-controls {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--gray-200);
+      padding: 24px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 20px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow-sm);
+    }
+    .cal-controls .form-group { margin: 0; flex: 1; min-width: 200px; }
+
+    /* Day color states for calendar */
+    .cal-day.day-available .cal-day-num { color: var(--gray-700); }
+    .cal-day.day-booked {
+      background: #fff0f0 !important;
+    }
+    .cal-day.day-booked .cal-day-num {
+      background: #dc2626;
+      color: white;
+      border-radius: 50%;
+    }
+    .cal-day.day-pending {
+      background: #fffbeb !important;
+    }
+    .cal-day.day-pending .cal-day-num {
+      background: #f59e0b;
+      color: white;
+      border-radius: 50%;
+    }
+    .cal-day.day-available:not(.cal-day-empty):hover {
+      background: #f0fdf4 !important;
+    }
+
+    /* Detail panel */
+    .detail-panel {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+    .detail-panel-header {
+      background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
+      color: white;
+      padding: 20px 24px;
+    }
+    .detail-panel-header h3 { color: white; font-size: 1rem; margin-bottom: 2px; }
+    .detail-panel-header p  { color: rgba(255,255,255,.7); font-size: .82rem; margin: 0; }
+    .detail-panel-body { padding: 20px 24px; }
+
+    .avail-space-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: .875rem;
+      gap: 8px;
+    }
+    .avail-space-item:last-child { border-bottom: none; }
+    .avail-space-name { font-weight: 600; color: var(--gray-800); flex: 1; min-width: 0; }
+    .avail-space-name span { display: block; font-size: .72rem; font-weight: 400; color: var(--gray-500); }
+    .avail-status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+    /* Multi-space mode calendar dots */
+    .cal-day .cal-dots { margin-top: 6px; }
+
+    /* Single space summary bar */
+    .avail-summary-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .avail-summary-item {
+      background: var(--gray-50);
+      border-radius: var(--radius-md);
+      padding: 12px;
+      text-align: center;
+      border: 1px solid var(--gray-200);
+    }
+    .avail-summary-num {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      display: block;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+    .avail-summary-lbl {
+      font-size: .7rem;
+      color: var(--gray-500);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      font-weight: 600;
+    }
+    .num-avail { color: #16a34a; }
+    .num-booked { color: #dc2626; }
+    .num-pending { color: #f59e0b; }
+
+    .space-type-group-label {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--gray-400);
+      padding: 8px 0 4px;
+    }
+  </style>
+</head>
+<body class="page-body">
+
+<!-- ── Navigation ──────────────────────────────────────────────────────────── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="Women's Empowerment Center™ home">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.69 2 6 4.69 6 8c0 2.22 1.21 4.15 3 5.19V15h6v-1.81C16.79 12.15 18 10.22 18 8c0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm-1 12h2v2h-2v-2zm0 3h2v3h-2v-3z"/></svg>
+      </div>
+      <div>
+        <span class="nav-logo-text">Women's Empowerment Center™</span>
+        <span class="nav-logo-sub">Space Booking</span>
+      </div>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html"      class="nav-link">Home</a></li>
+      <li><a href="spaces.html"     class="nav-link">Spaces</a></li>
+      <li><a href="calendar.html"   class="nav-link active">Calendar</a></li>
+      <li><a href="membership.html" class="nav-link">Membership</a></li>
+      <li><a href="admin.html"      class="nav-link">Admin</a></li>
+      <li><a href="booking.html"    class="nav-link nav-cta">Book a Space</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<nav class="nav-mobile" id="nav-mobile" aria-label="Mobile navigation">
+  <a href="index.html"      class="nav-link">Home</a>
+  <a href="spaces.html"     class="nav-link">Spaces</a>
+  <a href="calendar.html"   class="nav-link active">Calendar</a>
+  <a href="membership.html" class="nav-link">Membership</a>
+  <a href="admin.html"      class="nav-link">Admin</a>
+  <a href="booking.html"    class="nav-link nav-cta">Book a Space</a>
+</nav>
+
+<!-- ── Page Hero ───────────────────────────────────────────────────────────── -->
+<section class="page-hero">
+  <div class="container">
+    <div class="hero-eyebrow" style="justify-content:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Live Availability
+    </div>
+    <h1>Availability Calendar</h1>
+    <p>View real-time availability for all spaces. Select a space and month to see which dates are open for booking.</p>
+  </div>
+</section>
+
+<!-- ── Main Content ─────────────────────────────────────────────────────────── -->
+<section class="section" style="padding-top:36px">
+  <div class="container">
+
+    <!-- Controls -->
+    <div class="cal-controls">
+      <div class="form-group">
+        <label for="space-filter">Space</label>
+        <select id="space-filter">
+          <option value="">All Spaces (overview)</option>
+          <optgroup label="─ Small Booths ─" disabled></optgroup>
+          <option value="1">#1 — The Spark Studio</option>
+          <option value="2">#2 — The Rose Suite</option>
+          <option value="3">#3 — The Lavender Corner</option>
+          <option value="4">#4 — The Amber Workshop</option>
+          <option value="5">#5 — The Jade Haven</option>
+          <option value="6">#6 — The Opal Studio</option>
+          <option value="7">#7 — The Ruby Room</option>
+          <option value="8">#8 — The Pearl Suite</option>
+          <option value="9">#9 — The Sapphire Space</option>
+          <option value="10">#10 — The Coral Corner</option>
+          <option value="11">#11 — The Violet Studio</option>
+          <option value="12">#12 — The Ivory Workshop</option>
+          <option value="13">#13 — The Sage Haven</option>
+          <option value="14">#14 — The Topaz Suite</option>
+          <option value="15">#15 — The Onyx Studio</option>
+          <option value="16">#16 — The Fern Corner</option>
+          <option value="17">#17 — The Blush Room</option>
+          <option value="18">#18 — The Teal Space</option>
+          <optgroup label="─ Large Booths ─" disabled></optgroup>
+          <option value="19">#19 — The Horizon Hall</option>
+          <option value="20">#20 — The Summit Suite</option>
+          <option value="21">#21 — The Pioneer Space</option>
+          <option value="22">#22 — The Trailblazer Room</option>
+          <option value="23">#23 — The Catalyst Hall</option>
+          <option value="24">#24 — The Visionary Suite</option>
+          <option value="25">#25 — The Nexus Space</option>
+          <option value="26">#26 — The Apex Room</option>
+          <optgroup label="─ Event Spaces ─" disabled></optgroup>
+          <option value="27">#27 — The Grand Hall</option>
+          <option value="28">#28 — The Amphitheater</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:10px;flex-shrink:0;align-items:center;padding-bottom:2px">
+        <button class="cal-nav-btn" id="prev-month" aria-label="Previous month" style="background:var(--purple);width:40px;height:40px;border-radius:var(--radius-md)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span id="month-display" style="font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--gray-800);white-space:nowrap;min-width:160px;text-align:center"></span>
+        <button class="cal-nav-btn" id="next-month" aria-label="Next month" style="background:var(--purple);width:40px;height:40px;border-radius:var(--radius-md)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+      <button class="btn btn-secondary btn-sm" id="today-btn" style="flex-shrink:0;padding-bottom:9px;padding-top:9px">Today</button>
+    </div>
+
+    <div class="cal-layout">
+      <!-- Calendar -->
+      <div>
+        <div class="cal-wrapper" id="cal-wrapper">
+          <div class="cal-header">
+            <span class="cal-month-label" id="cal-month-label"></span>
+            <div id="cal-loading-indicator" style="display:none">
+              <div class="spinner" style="width:20px;height:20px;border-width:2px;border-color:rgba(255,255,255,.3);border-top-color:white"></div>
+            </div>
+          </div>
+          <div class="cal-grid" id="cal-grid">
+            <div class="cal-day-name">Sun</div>
+            <div class="cal-day-name">Mon</div>
+            <div class="cal-day-name">Tue</div>
+            <div class="cal-day-name">Wed</div>
+            <div class="cal-day-name">Thu</div>
+            <div class="cal-day-name">Fri</div>
+            <div class="cal-day-name">Sat</div>
+            <!-- days filled by JS -->
+          </div>
+          <div class="cal-legend">
+            <div class="cal-legend-item">
+              <div class="cal-legend-dot" style="background:#16a34a"></div>
+              Available
+            </div>
+            <div class="cal-legend-item">
+              <div class="cal-legend-dot" style="background:#dc2626"></div>
+              Booked
+            </div>
+            <div class="cal-legend-item">
+              <div class="cal-legend-dot" style="background:#f59e0b"></div>
+              Pending
+            </div>
+            <div class="cal-legend-item">
+              <div class="cal-legend-dot" style="background:var(--purple)"></div>
+              Today
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail Panel -->
+      <div>
+        <!-- Summary stats (single space mode) -->
+        <div id="summary-stats" style="display:none;margin-bottom:20px">
+          <div class="avail-summary-bar">
+            <div class="avail-summary-item">
+              <span class="avail-summary-num num-avail" id="stat-avail">—</span>
+              <span class="avail-summary-lbl">Available</span>
+            </div>
+            <div class="avail-summary-item">
+              <span class="avail-summary-num num-pending" id="stat-pending">—</span>
+              <span class="avail-summary-lbl">Pending</span>
+            </div>
+            <div class="avail-summary-item">
+              <span class="avail-summary-num num-booked" id="stat-booked">—</span>
+              <span class="avail-summary-lbl">Booked</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-panel">
+          <div class="detail-panel-header">
+            <h3 id="detail-date-label">Select a Day</h3>
+            <p id="detail-subtitle">Click any date on the calendar for details</p>
+          </div>
+          <div class="detail-panel-body" id="detail-body">
+            <div style="text-align:center;padding:32px 16px;color:var(--gray-400)">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 12px;display:block;opacity:.4"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <p style="font-size:.88rem">Click a date on the calendar to see availability details for that day.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick book card -->
+        <div id="quick-book-card" style="display:none;background:var(--purple-pale);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:20px;margin-top:16px">
+          <h4 style="font-size:.9rem;margin-bottom:8px;color:var(--purple-dark)">Book This Date</h4>
+          <p style="font-size:.82rem;margin-bottom:12px" id="quick-book-msg"></p>
+          <a href="#" class="btn btn-primary btn-sm" style="width:100%;text-align:center" id="quick-book-btn">Book Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ───────────────────────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.69 2 6 4.69 6 8c0 2.22 1.21 4.15 3 5.19V15h6v-1.81C16.79 12.15 18 10.22 18 8c0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm-1 12h2v2h-2v-2zm0 3h2v3h-2v-3z" fill="white"/></svg>
+          </div>
+          <div>
+            <span class="nav-logo-text">Women's Empowerment Center™</span>
+            <span class="nav-logo-sub">Space Booking System</span>
+          </div>
+        </a>
+        <p class="footer-desc">Providing professional, affordable, and inspiring spaces for women entrepreneurs, creatives, and community leaders.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Spaces</h4>
+        <ul class="footer-links">
+          <li><a href="spaces.html?type=small" class="footer-link">Standard Booths (26)</a></li>
+          <li><a href="spaces.html?type=large" class="footer-link">Premium Suites (2)</a></li>
+          <li><a href="spaces.html?type=event" class="footer-link">Event Spaces (1)</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Booking</h4>
+        <ul class="footer-links">
+          <li><a href="booking.html" class="footer-link">Book a Space</a></li>
+          <li><a href="membership.html" class="footer-link">Membership Plans</a></li>
+          <li><a href="calendar.html" class="footer-link">Availability</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-links">
+          <li><span class="footer-link">📍 Olympia WEC Campus</span></li>
+          <li><span class="footer-link">🕐 Mon–Fri 8:00 AM – 6:00 PM</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Olympia's Women's Empowerment Center™. All rights reserved.<br><span style="font-size:.75rem;opacity:.7">Built by iCoach Solutions with ❤️ for our community.</span></p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+<script src="js/app.js"></script>
+<script>
+(function() {
+
+  const SPACE_NAMES = {
+    "1":"The Blue","2":"The Rose","3":"The Lavender","4":"The Amber",
+    "5":"The Jade","6":"The Opal","7":"The Ruby","8":"The Pearl",
+    "9":"The Sapphire","10":"The Coral","11":"The Violet","12":"The Ivory",
+    "13":"The Sage","14":"The Topaz","15":"The Onyx","16":"The Fern",
+    "17":"The Blush","18":"The Teal","19":"The Crimson","20":"The Gold",
+    "21":"The Silver","22":"The Copper","23":"The Emerald","24":"The Indigo",
+    "25":"The Mauve","26":"The Bronze","27":"Suite Scarlet","28":"Suite Azure",
+    "29":"The Grand Hall"
+  };
+
+  const SPACE_TYPES = {
+    "1":"small","2":"small","3":"small","4":"small","5":"small","6":"small","7":"small","8":"small","9":"small",
+    "10":"small","11":"small","12":"small","13":"small","14":"small","15":"small","16":"small","17":"small","18":"small",
+    "19":"small","20":"small","21":"small","22":"small","23":"small","24":"small","25":"small","26":"small",
+    "27":"large","28":"large",
+    "29":"event"
+  };
+
+  const TYPE_LABELS = { small: 'Standard Booth', large: 'Premium Suite', event: 'Event Space' };
+
+  let currentYear, currentMonth; // 0-indexed month
+  let selectedSpaceId = '';
+  let availData = null;
+  let selectedDateStr = null;
+
+  const today = new Date();
+  currentYear  = today.getFullYear();
+  currentMonth = today.getMonth();
+
+  function monthKey() {
+    return `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+  }
+
+  function updateMonthDisplay() {
+    const label = `${MONTHS[currentMonth]} ${currentYear}`;
+    document.getElementById('month-display').textContent = label;
+    document.getElementById('cal-month-label').textContent = label;
+  }
+
+  async function loadAvailability() {
+    const loadingEl = document.getElementById('cal-loading-indicator');
+    loadingEl.style.display = 'flex';
+    availData = null;
+
+    try {
+      const res = await api.getAvailability(selectedSpaceId || null, monthKey());
+      availData = res.availability;
+    } catch (e) {
+      showToast('Could not load availability data. The API may not be running yet.', 'warning');
+      availData = null;
+    } finally {
+      loadingEl.style.display = 'none';
+    }
+
+    renderCalendar();
+    updateStats();
+  }
+
+  function getDateStatus(dateStr) {
+    if (!availData) return 'available';
+
+    if (selectedSpaceId) {
+      const spaceData = availData[selectedSpaceId];
+      return spaceData ? (spaceData.days[dateStr] || 'available') : 'available';
+    }
+
+    // Multi-space: aggregate
+    let hasBooked = false, hasPending = false;
+    const ids = Object.keys(availData);
+    for (const id of ids) {
+      const status = availData[id].days[dateStr];
+      if (status === 'booked') hasBooked = true;
+      else if (status === 'pending') hasPending = true;
+    }
+    if (hasBooked) return 'booked';
+    if (hasPending) return 'pending';
+    return 'available';
+  }
+
+  function renderCalendar() {
+    updateMonthDisplay();
+
+    const grid = document.getElementById('cal-grid');
+    // Keep day-name headers (first 7 children)
+    const headers = Array.from(grid.children).slice(0, 7);
+    grid.innerHTML = '';
+    headers.forEach(h => grid.appendChild(h));
+
+    const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const todayStr2 = today.toISOString().slice(0, 10);
+
+    // Empty cells before first day
+    for (let i = 0; i < firstDay; i++) {
+      const cell = document.createElement('div');
+      cell.className = 'cal-day cal-day-empty';
+      cell.innerHTML = '<span class="cal-day-num"></span>';
+      grid.appendChild(cell);
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const status = getDateStatus(dateStr);
+      const isToday = dateStr === todayStr2;
+      const isPast = dateStr < todayStr2;
+
+      const cell = document.createElement('div');
+      cell.className = `cal-day day-${status}${isToday ? ' today' : ''}${isPast ? ' cal-day-past' : ''}`;
+      cell.dataset.date = dateStr;
+      cell.style.opacity = isPast ? '0.5' : '1';
+
+      if (!selectedSpaceId && availData) {
+        // Multi-space: show colored dots for each type
+        const smallStatuses = [];
+        const largeStatuses = [];
+        const eventStatuses = [];
+
+        for (const id of Object.keys(availData)) {
+          const s = availData[id].days[dateStr] || 'available';
+          if (SPACE_TYPES[id] === 'small') smallStatuses.push(s);
+          else if (SPACE_TYPES[id] === 'large') largeStatuses.push(s);
+          else eventStatuses.push(s);
+        }
+
+        function aggregateType(statuses) {
+          if (!statuses.length) return null;
+          if (statuses.every(s => s === 'booked')) return 'booked';
+          if (statuses.some(s => s === 'booked')) return 'partial-booked';
+          if (statuses.some(s => s === 'pending')) return 'pending';
+          return 'available';
+        }
+
+        // Count statuses across all spaces for this day
+        let dayAvail = 0, dayBooked = 0, dayPending = 0;
+        for (const id of Object.keys(availData)) {
+          const s = availData[id].days[dateStr] || 'available';
+          if (s === 'available') dayAvail++;
+          else if (s === 'booked') dayBooked++;
+          else if (s === 'pending') dayPending++;
+        }
+
+        let countsHtml = '<div style="display:flex;flex-direction:column;gap:1px;margin-top:4px;font-size:.6rem;font-weight:700;line-height:1.2">';
+        if (dayAvail > 0) countsHtml += `<div style="display:flex;align-items:center;gap:3px"><div style="width:6px;height:6px;border-radius:50%;background:#16a34a;flex-shrink:0"></div><span style="color:#16a34a">${dayAvail}</span></div>`;
+        if (dayBooked > 0) countsHtml += `<div style="display:flex;align-items:center;gap:3px"><div style="width:6px;height:6px;border-radius:50%;background:#dc2626;flex-shrink:0"></div><span style="color:#dc2626">${dayBooked}</span></div>`;
+        if (dayPending > 0) countsHtml += `<div style="display:flex;align-items:center;gap:3px"><div style="width:6px;height:6px;border-radius:50%;background:#f59e0b;flex-shrink:0"></div><span style="color:#f59e0b">${dayPending}</span></div>`;
+        countsHtml += '</div>';
+
+        cell.innerHTML = `<span class="cal-day-num">${d}</span>${countsHtml}`;
+      } else {
+        cell.innerHTML = `<span class="cal-day-num">${d}</span>`;
+      }
+
+      cell.addEventListener('click', () => {
+        if (!isPast) selectDate(dateStr);
+      });
+
+      grid.appendChild(cell);
+    }
+  }
+
+  function selectDate(dateStr) {
+    // Deselect previous
+    document.querySelectorAll('.cal-day.selected').forEach(c => c.classList.remove('selected'));
+    const cell = document.querySelector(`.cal-day[data-date="${dateStr}"]`);
+    if (cell) cell.classList.add('selected');
+    selectedDateStr = dateStr;
+    updateDetailPanel(dateStr);
+  }
+
+  function updateDetailPanel(dateStr) {
+    const label = document.getElementById('detail-date-label');
+    const subtitle = document.getElementById('detail-subtitle');
+    const body = document.getElementById('detail-body');
+    const quickBook = document.getElementById('quick-book-card');
+
+    label.textContent = formatDateDisplay(dateStr);
+
+    if (!availData) {
+      subtitle.textContent = 'Availability data unavailable';
+      body.innerHTML = '<p style="font-size:.88rem;color:var(--gray-500);padding:16px 0">Connect the API to see live availability.</p>';
+      quickBook.style.display = 'none';
+      return;
+    }
+
+    if (selectedSpaceId) {
+      const spaceData = availData[selectedSpaceId];
+      const status = spaceData ? (spaceData.days[dateStr] || 'available') : 'available';
+      const spaceName = SPACE_NAMES[selectedSpaceId];
+
+      const statusConfig = {
+        available: { color: '#16a34a', label: 'Available', bg: '#dcfce7', icon: '✓' },
+        booked:    { color: '#dc2626', label: 'Booked',    bg: '#fee2e2', icon: '✕' },
+        pending:   { color: '#f59e0b', label: 'Pending',   bg: '#fef9c3', icon: '⏳' }
+      };
+      const cfg = statusConfig[status];
+
+      subtitle.textContent = `${TYPE_LABELS[SPACE_TYPES[selectedSpaceId]]}`;
+      body.innerHTML = `
+        <div style="background:${cfg.bg};border-radius:var(--radius-md);padding:16px;display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <div style="font-size:1.5rem">${cfg.icon}</div>
+          <div>
+            <div style="font-weight:700;color:${cfg.color};font-size:1rem">${cfg.label}</div>
+            <div style="font-size:.82rem;color:var(--gray-600)">${spaceName}</div>
+          </div>
+        </div>
+        ${status === 'available'
+          ? '<p style="font-size:.875rem;color:#166534">This space is available on the selected date. Click below to make a booking.</p>'
+          : status === 'booked'
+          ? '<p style="font-size:.875rem;color:#991b1b">This space is already booked on this date. Please select a different date or space.</p>'
+          : '<p style="font-size:.875rem;color:#92400e">There is a pending booking request for this date. It may still be approved or denied.</p>'
+        }
+      `;
+
+      if (status === 'available') {
+        document.getElementById('quick-book-msg').textContent = `Book ${spaceName} on ${formatDateDisplay(dateStr)}`;
+        document.getElementById('quick-book-btn').href = `booking.html?spaceId=${selectedSpaceId}`;
+        quickBook.style.display = 'block';
+      } else {
+        quickBook.style.display = 'none';
+      }
+    } else {
+      // Show all spaces for this date
+      subtitle.textContent = 'All spaces availability';
+      quickBook.style.display = 'none';
+
+      const ids = Object.keys(availData);
+      const byType = { small: [], large: [], event: [] };
+      ids.forEach(id => {
+        const status = availData[id].days[dateStr] || 'available';
+        const type = SPACE_TYPES[id];
+        if (byType[type]) byType[type].push({ id, status });
+      });
+
+      const availCount  = ids.filter(id => (availData[id].days[dateStr] || 'available') === 'available').length;
+      const bookedCount = ids.filter(id => availData[id].days[dateStr] === 'booked').length;
+      const pendingCount= ids.filter(id => availData[id].days[dateStr] === 'pending').length;
+
+      let html = `
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px">
+          <div style="text-align:center;background:#dcfce7;border-radius:var(--radius-md);padding:10px">
+            <div style="font-weight:700;color:#16a34a;font-size:1.3rem">${availCount}</div>
+            <div style="font-size:.7rem;color:#166534;text-transform:uppercase;letter-spacing:.06em">Available</div>
+          </div>
+          <div style="text-align:center;background:#fef9c3;border-radius:var(--radius-md);padding:10px">
+            <div style="font-weight:700;color:#f59e0b;font-size:1.3rem">${pendingCount}</div>
+            <div style="font-size:.7rem;color:#92400e;text-transform:uppercase;letter-spacing:.06em">Pending</div>
+          </div>
+          <div style="text-align:center;background:#fee2e2;border-radius:var(--radius-md);padding:10px">
+            <div style="font-weight:700;color:#dc2626;font-size:1.3rem">${bookedCount}</div>
+            <div style="font-size:.7rem;color:#991b1b;text-transform:uppercase;letter-spacing:.06em">Booked</div>
+          </div>
+        </div>`;
+
+      const statusDot = { available: '#16a34a', booked: '#dc2626', pending: '#f59e0b' };
+      const statusLbl = { available: 'Available', booked: 'Booked', pending: 'Pending' };
+
+      ['small','large','event'].forEach(type => {
+        const items = byType[type];
+        if (!items.length) return;
+        html += `<div class="space-type-group-label">${TYPE_LABELS[type]}s</div>`;
+        items.forEach(({id, status}) => {
+          html += `
+            <div class="avail-space-item">
+              <div class="avail-space-name">
+                #${id} ${SPACE_NAMES[id]}
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+                <div class="avail-status-dot" style="background:${statusDot[status]}"></div>
+                <span style="font-size:.78rem;font-weight:600;color:${statusDot[status]}">${statusLbl[status]}</span>
+              </div>
+            </div>`;
+        });
+      });
+
+      if (availCount > 0) {
+        html += `<a href="booking.html" class="btn btn-primary btn-sm" style="width:100%;text-align:center;margin-top:16px">Book an Available Space</a>`;
+      }
+
+      body.innerHTML = html;
+    }
+  }
+
+  function updateStats() {
+    const statsEl = document.getElementById('summary-stats');
+    if (!selectedSpaceId || !availData) {
+      statsEl.style.display = 'none';
+      return;
+    }
+
+    const spaceData = availData[selectedSpaceId];
+    if (!spaceData) { statsEl.style.display = 'none'; return; }
+
+    const days = Object.values(spaceData.days);
+    const avail   = days.filter(d => d === 'available').length;
+    const booked  = days.filter(d => d === 'booked').length;
+    const pending = days.filter(d => d === 'pending').length;
+
+    document.getElementById('stat-avail').textContent   = avail;
+    document.getElementById('stat-booked').textContent  = booked;
+    document.getElementById('stat-pending').textContent = pending;
+    statsEl.style.display = 'block';
+  }
+
+  // Event listeners
+  document.getElementById('prev-month').addEventListener('click', () => {
+    currentMonth--;
+    if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+    selectedDateStr = null;
+    document.getElementById('detail-date-label').textContent = 'Select a Day';
+    document.getElementById('detail-subtitle').textContent = 'Click any date on the calendar for details';
+    document.getElementById('detail-body').innerHTML = `<div style="text-align:center;padding:32px 16px;color:var(--gray-400)"><p style="font-size:.88rem">Click a date to see availability details.</p></div>`;
+    document.getElementById('quick-book-card').style.display = 'none';
+    loadAvailability();
+  });
+
+  document.getElementById('next-month').addEventListener('click', () => {
+    currentMonth++;
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+    selectedDateStr = null;
+    document.getElementById('detail-date-label').textContent = 'Select a Day';
+    document.getElementById('detail-subtitle').textContent = 'Click any date on the calendar for details';
+    document.getElementById('detail-body').innerHTML = `<div style="text-align:center;padding:32px 16px;color:var(--gray-400)"><p style="font-size:.88rem">Click a date to see availability details.</p></div>`;
+    document.getElementById('quick-book-card').style.display = 'none';
+    loadAvailability();
+  });
+
+  document.getElementById('today-btn').addEventListener('click', () => {
+    currentYear  = today.getFullYear();
+    currentMonth = today.getMonth();
+    loadAvailability();
+  });
+
+  document.getElementById('space-filter').addEventListener('change', function() {
+    selectedSpaceId = this.value;
+    selectedDateStr = null;
+    document.getElementById('detail-date-label').textContent = 'Select a Day';
+    document.getElementById('detail-subtitle').textContent = 'Click any date on the calendar for details';
+    document.getElementById('detail-body').innerHTML = `<div style="text-align:center;padding:32px 16px;color:var(--gray-400)"><p style="font-size:.88rem">Click a date to see availability details.</p></div>`;
+    document.getElementById('quick-book-card').style.display = 'none';
+    loadAvailability();
+  });
+
+  // Init: render with no data first, then fetch
+  updateMonthDisplay();
+  renderCalendar();
+  loadAvailability();
+
+})();
+</script>
+</body>
+</html>

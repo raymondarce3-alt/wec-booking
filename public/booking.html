@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Space — Women's Empowerment Center™</title>
+  <meta name="description" content="Book a booth or event space at the Women's Empowerment Center™. Choose your space, dates, and booking type.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=20260323b">
+  <style>
+    .booking-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 36px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .booking-layout { grid-template-columns: 1fr; }
+      .booking-sidebar { order: -1; }
+    }
+
+    .booking-form-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--gray-200);
+      padding: 40px;
+      box-shadow: var(--shadow-sm);
+    }
+    @media (max-width: 480px) {
+      .booking-form-card { padding: 24px 20px; }
+    }
+
+    .booking-type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 560px) {
+      .booking-type-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .booking-type-option {
+      cursor: pointer;
+      position: relative;
+    }
+    .booking-type-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+    .booking-type-label {
+      display: block;
+      padding: 12px 10px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--gray-200);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      background: white;
+    }
+    .booking-type-label:hover {
+      border-color: var(--purple);
+      background: var(--purple-pale);
+    }
+    .booking-type-option input:checked + .booking-type-label {
+      border-color: var(--purple);
+      background: var(--purple-pale);
+      color: var(--purple-dark);
+    }
+    .booking-type-name {
+      display: block;
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--gray-700);
+      margin-bottom: 2px;
+    }
+    .booking-type-option input:checked + .booking-type-label .booking-type-name {
+      color: var(--purple);
+    }
+    .booking-type-desc {
+      display: block;
+      font-size: .7rem;
+      color: var(--gray-400);
+      line-height: 1.3;
+    }
+    .booking-type-option input:checked + .booking-type-label .booking-type-desc {
+      color: var(--purple-light);
+    }
+
+    /* Summary sidebar */
+    .summary-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: calc(var(--nav-h) + 24px);
+    }
+    .summary-header {
+      background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 100%);
+      color: white;
+      padding: 24px;
+    }
+    .summary-header h3 { color: white; font-size: 1.1rem; margin-bottom: 4px; }
+    .summary-header p { color: rgba(255,255,255,.7); font-size: .82rem; margin: 0; }
+    .summary-body { padding: 24px; }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--gray-100);
+      font-size: .875rem;
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-label { color: var(--gray-500); font-weight: 500; flex-shrink: 0; }
+    .summary-value { color: var(--gray-800); font-weight: 600; text-align: right; }
+    .summary-placeholder { color: var(--gray-300); font-style: italic; font-weight: 400; }
+
+    .date-hint {
+      background: var(--purple-pale);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+      font-size: .8rem;
+      color: var(--purple-dark);
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      margin-top: 8px;
+    }
+    .date-hint svg { flex-shrink: 0; margin-top: 1px; }
+
+    /* Success screen */
+    .success-screen {
+      text-align: center;
+      padding: 60px 40px;
+    }
+    .success-icon {
+      width: 80px; height: 80px;
+      background: #dcfce7;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .success-icon svg { width: 40px; height: 40px; color: #16a34a; }
+    .success-id {
+      display: inline-block;
+      background: var(--gray-100);
+      color: var(--gray-600);
+      padding: 6px 16px;
+      border-radius: var(--radius-full);
+      font-size: .82rem;
+      font-family: monospace;
+      letter-spacing: .04em;
+      margin: 12px 0 24px;
+    }
+  </style>
+</head>
+<body class="page-body">
+
+<!-- ── Navigation ──────────────────────────────────────────────────────────── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="Women's Empowerment Center™ home">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.69 2 6 4.69 6 8c0 2.22 1.21 4.15 3 5.19V15h6v-1.81C16.79 12.15 18 10.22 18 8c0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm-1 12h2v2h-2v-2zm0 3h2v3h-2v-3z"/></svg>
+      </div>
+      <div>
+        <span class="nav-logo-text">Women's Empowerment Center™</span>
+        <span class="nav-logo-sub">Space Booking</span>
+      </div>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html"      class="nav-link">Home</a></li>
+      <li><a href="spaces.html"     class="nav-link">Spaces</a></li>
+      <li><a href="calendar.html"   class="nav-link">Calendar</a></li>
+      <li><a href="membership.html" class="nav-link">Membership</a></li>
+      <li><a href="admin.html"      class="nav-link">Admin</a></li>
+      <li><a href="booking.html"    class="nav-link nav-cta active">Book a Space</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<nav class="nav-mobile" id="nav-mobile" aria-label="Mobile navigation">
+  <a href="index.html"      class="nav-link">Home</a>
+  <a href="spaces.html"     class="nav-link">Spaces</a>
+  <a href="calendar.html"   class="nav-link">Calendar</a>
+  <a href="membership.html" class="nav-link">Membership</a>
+  <a href="admin.html"      class="nav-link">Admin</a>
+  <a href="booking.html"    class="nav-link nav-cta">Book a Space</a>
+</nav>
+
+<!-- ── Page Hero ───────────────────────────────────────────────────────────── -->
+<section class="page-hero">
+  <div class="container">
+    <div class="hero-eyebrow" style="justify-content:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Reserve Your Space
+    </div>
+    <h1>Book a Space</h1>
+    <p>Fill in the form below and our team will review and confirm your booking. No payment required upfront.</p>
+  </div>
+</section>
+
+<!-- ── Main Content ─────────────────────────────────────────────────────────── -->
+<section class="section" style="padding-top:48px">
+  <div class="container">
+
+    <!-- Progress steps -->
+    <div class="steps" style="max-width:600px;margin:0 auto 40px;display:flex;flex-direction:row!important;align-items:flex-start;gap:0" id="booking-steps">
+      <div class="step active" id="step-1" style="display:flex;flex-direction:column!important;align-items:center;gap:8px;flex:1;text-align:center">
+        <div class="step-circle">1</div>
+        <span class="step-label">Space &amp; Dates</span>
+      </div>
+      <div class="step" id="step-2" style="display:flex;flex-direction:column!important;align-items:center;gap:8px;flex:1;text-align:center">
+        <div class="step-circle">2</div>
+        <span class="step-label">Your Details</span>
+      </div>
+      <div class="step" id="step-3" style="display:flex;flex-direction:column!important;align-items:center;gap:8px;flex:1;text-align:center">
+        <div class="step-circle">3</div>
+        <span class="step-label">Confirmation</span>
+      </div>
+    </div>
+    <style>.step::after,.step:not(:last-child)::after{display:none!important;content:none!important}</style>
+
+    <!-- Mobile-only Become a Member CTA -->
+    <div id="mobile-member-cta" style="display:none;background:var(--gold-pale);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:16px;margin-bottom:20px;max-width:600px;margin-left:auto;margin-right:auto">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold-dark)"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <span style="font-size:.85rem;font-weight:700;color:var(--gold-dark)">Become a Member — Get a Discounted Rate</span>
+      </div>
+      <a href="membership.html" class="btn btn-gold btn-sm" style="width:100%;text-align:center;font-size:.8rem">View Membership Plans</a>
+    </div>
+    <style>
+      @media (max-width: 768px) {
+        #mobile-member-cta { display: block !important; }
+        #sidebar-member-cta { display: none !important; }
+      }
+    </style>
+
+    <div class="booking-layout">
+
+      <!-- ── Form ── -->
+      <div id="form-wrap">
+        <div class="booking-form-card" id="booking-form-card">
+          <form id="booking-form" novalidate>
+
+            <!-- ─── Step 1: Space & Dates ─── -->
+            <div id="form-step-1">
+              <h3 style="margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--gray-100)">Select Space &amp; Dates</h3>
+
+              <div class="form-group">
+                <label for="space-select">Space <span class="required">*</span></label>
+                <select id="space-select" name="spaceId" required>
+                  <option value="">— Choose a space —</option>
+                  <optgroup label="Small Booths (18)"></optgroup>
+                  <optgroup label="Large Booths (8)"></optgroup>
+                  <optgroup label="Event Spaces (2)"></optgroup>
+                </select>
+                <div class="field-error" id="err-space">Please select a space.</div>
+              </div>
+
+              <div id="space-preview" style="display:none;background:var(--purple-pale);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:20px;font-size:.875rem">
+                <div style="font-weight:600;color:var(--purple-dark)" id="preview-name">—</div>
+                <div style="color:var(--gray-500);font-size:.8rem;margin-top:2px" id="preview-location">—</div>
+              </div>
+
+              <div class="form-group">
+                <label for="booking-type">Booking Type <span class="required">*</span></label>
+                <div class="booking-type-grid" id="booking-type-grid">
+                  <label class="booking-type-option">
+                    <input type="radio" name="bookingType" value="daily" required>
+                    <span class="booking-type-label">
+                      <span class="booking-type-name">Daily</span>
+                      <span class="booking-type-desc">1 day</span>
+                    </span>
+                  </label>
+                  <label class="booking-type-option">
+                    <input type="radio" name="bookingType" value="weekend">
+                    <span class="booking-type-label">
+                      <span class="booking-type-name">Weekend</span>
+                      <span class="booking-type-desc">Sat–Sun</span>
+                    </span>
+                  </label>
+                  <label class="booking-type-option">
+                    <input type="radio" name="bookingType" value="weekday">
+                    <span class="booking-type-label">
+                      <span class="booking-type-name">Weekday</span>
+                      <span class="booking-type-desc">Mon–Fri</span>
+                    </span>
+                  </label>
+                  <label class="booking-type-option">
+                    <input type="radio" name="bookingType" value="weekly">
+                    <span class="booking-type-label">
+                      <span class="booking-type-name">Weekly</span>
+                      <span class="booking-type-desc">7 days</span>
+                    </span>
+                  </label>
+                  <label class="booking-type-option">
+                    <input type="radio" name="bookingType" value="monthly">
+                    <span class="booking-type-label">
+                      <span class="booking-type-name">Monthly</span>
+                      <span class="booking-type-desc">Full month</span>
+                    </span>
+                  </label>
+
+                </div>
+                <div class="field-error" id="err-type">Please select a booking type.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="start-date">Start Date <span class="required">*</span></label>
+                <input type="date" id="start-date" name="startDate" required>
+                <div class="date-hint" id="date-hint" style="display:none">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span id="date-hint-text"></span>
+                </div>
+                <div class="field-error" id="err-date">Please select a start date.</div>
+              </div>
+
+              <div class="form-group" id="end-date-group" style="display:none">
+                <label>End Date (Auto-calculated)</label>
+                <input type="text" id="end-date-display" readonly style="background:var(--gray-50);cursor:default;color:var(--gray-600)">
+              </div>
+
+              <div style="display:flex;justify-content:flex-end;margin-top:8px">
+                <button type="button" class="btn btn-primary btn-lg" id="step1-next">Continue to Contact Details →</button>
+              </div>
+            </div>
+
+            <!-- ─── Step 2: Contact Details ─── -->
+            <div id="form-step-2" style="display:none">
+              <h3 style="margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--gray-100)">Your Contact Details</h3>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="contact-name">Full Name <span class="required">*</span></label>
+                  <input type="text" id="contact-name" name="contactName" placeholder="Jane Smith" required autocomplete="name">
+                  <div class="field-error" id="err-name">Please enter your full name.</div>
+                </div>
+                <div class="form-group">
+                  <label for="contact-phone">Phone Number</label>
+                  <input type="tel" id="contact-phone" name="contactPhone" placeholder="(555) 123-4567" autocomplete="tel">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-email">Email Address <span class="required">*</span></label>
+                <input type="email" id="contact-email" name="contactEmail" placeholder="jane@example.com" required autocomplete="email">
+                <div class="field-error" id="err-email">Please enter a valid email address.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="booking-notes">Additional Notes</label>
+                <textarea id="booking-notes" name="notes" placeholder="Describe your intended use, any special requirements, or questions for our team…" style="min-height:110px"></textarea>
+                <div class="field-hint">Optional — helps us prepare your space.</div>
+              </div>
+
+              <div class="alert alert-info" style="font-size:.85rem">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>Your booking will be submitted as <strong>Pending</strong> and reviewed by our team. You'll receive confirmation by email once approved.</span>
+              </div>
+
+              <div style="display:flex;justify-content:space-between;gap:12px;margin-top:8px;flex-wrap:wrap">
+                <button type="button" class="btn btn-secondary btn-lg" id="step2-back">← Back</button>
+                <button type="submit" class="btn btn-primary btn-lg" id="submit-btn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Submit Booking Request
+                </button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- ── Success Screen ── -->
+        <div class="booking-form-card success-screen" id="success-screen" style="display:none">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2 style="margin-bottom:8px" id="success-title">Booking Confirmed!</h2>
+          <p style="font-size:1.05rem" id="success-subtitle">Your payment has been processed and your space is reserved. A welcome email with next steps is on its way!</p>
+          <div class="success-id" id="success-booking-id"></div>
+          <div style="background:var(--gray-50);border-radius:var(--radius-lg);padding:20px;margin-bottom:28px;text-align:left" id="success-summary"></div>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-primary" onclick="printReceipt()" style="display:flex;align-items:center;gap:8px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              Print Receipt
+            </button>
+            <a href="booking.html" class="btn btn-secondary">Make Another Booking</a>
+            <a href="spaces.html" class="btn btn-secondary">Browse More Spaces</a>
+          </div>
+        </div>
+
+        <!-- ── Canceled Screen ── -->
+        <div class="booking-form-card" id="canceled-screen" style="display:none;text-align:center;padding:48px 24px">
+          <div style="width:64px;height:64px;border-radius:50%;background:#FEE2E2;display:flex;align-items:center;justify-content:center;margin:0 auto 20px">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </div>
+          <h2 style="margin-bottom:8px">Payment Canceled</h2>
+          <p style="font-size:1.05rem;margin-bottom:24px">Your payment was not completed. Your booking is still saved — you can try again below.</p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <a href="booking.html" class="btn btn-primary">Try Again</a>
+            <a href="spaces.html" class="btn btn-secondary">Browse Spaces</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Summary Sidebar ── -->
+      <div class="booking-sidebar">
+        <div class="summary-card">
+          <div class="summary-header">
+            <h3>Booking Summary</h3>
+            <p>Review your selection before submitting</p>
+          </div>
+          <div class="summary-body">
+            <div class="summary-row">
+              <span class="summary-label">Space</span>
+              <span class="summary-value summary-placeholder" id="sum-space">Not selected</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Type</span>
+              <span class="summary-value summary-placeholder" id="sum-type">Not selected</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Start Date</span>
+              <span class="summary-value summary-placeholder" id="sum-start">Not set</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">End Date</span>
+              <span class="summary-value summary-placeholder" id="sum-end">—</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label">Contact</span>
+              <span class="summary-value summary-placeholder" id="sum-name">Not entered</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Help box (hidden on mobile — shown via mobile-member-cta above) -->
+        <div id="sidebar-member-cta" style="background:var(--gold-pale);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:20px;margin-top:20px">
+          <h4 style="font-size:.9rem;margin-bottom:8px;color:var(--gold-dark)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold-dark)" style="display:inline;vertical-align:middle;margin-right:6px"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            Become a Member — Get a Discounted Rate
+          </h4>
+          <p style="font-size:.82rem;margin-bottom:12px">Members enjoy priority booking, exclusive rates, and community benefits.</p>
+          <a href="membership.html" class="btn btn-gold btn-sm" style="width:100%;text-align:center">View Membership Plans</a>
+        </div>
+
+        <!-- Calendar link -->
+        <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:20px;margin-top:12px">
+          <p style="font-size:.82rem;margin-bottom:10px;color:var(--gray-600)">Not sure about dates? Check availability first.</p>
+          <a href="calendar.html" class="btn btn-secondary btn-sm" style="width:100%;text-align:center">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            View Availability Calendar
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ───────────────────────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.69 2 6 4.69 6 8c0 2.22 1.21 4.15 3 5.19V15h6v-1.81C16.79 12.15 18 10.22 18 8c0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm-1 12h2v2h-2v-2zm0 3h2v3h-2v-3z" fill="white"/></svg>
+          </div>
+          <div>
+            <span class="nav-logo-text">Women's Empowerment Center™</span>
+            <span class="nav-logo-sub">Space Booking System</span>
+          </div>
+        </a>
+        <p class="footer-desc">Providing professional, affordable, and inspiring spaces for women entrepreneurs, creatives, and community leaders.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Spaces</h4>
+        <ul class="footer-links">
+          <li><a href="spaces.html?type=small" class="footer-link">Standard Booths (26)</a></li>
+          <li><a href="spaces.html?type=large" class="footer-link">Premium Suites (2)</a></li>
+          <li><a href="spaces.html?type=event" class="footer-link">Event Spaces (1)</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Booking</h4>
+        <ul class="footer-links">
+          <li><a href="booking.html" class="footer-link">Book a Space</a></li>
+          <li><a href="membership.html" class="footer-link">Membership Plans</a></li>
+          <li><a href="calendar.html" class="footer-link">Availability</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-links">
+          <li><span class="footer-link">📍 Olympia WEC Campus</span></li>
+          <li><span class="footer-link">🕐 Mon–Fri 8:00 AM – 6:00 PM</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Olympia's Women's Empowerment Center™. All rights reserved.<br><span style="font-size:.75rem;opacity:.7">Built by iCoach Solutions with ❤️ for our community.</span></p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+<script src="js/app.js"></script>
+<script>
+(function() {
+
+  const SPACES = [
+    {id:"1",number:1,name:"Booth - Blue",type:"small",location:"Building A, Floor 1 · Bay 1"},
+    {id:"2",number:2,name:"Booth - Rose",type:"small",location:"Building A, Floor 1 · Bay 2"},
+    {id:"3",number:3,name:"Booth - Lavender",type:"small",location:"Building A, Floor 1 · Bay 3"},
+    {id:"4",number:4,name:"Booth - Amber",type:"small",location:"Building A, Floor 1 · Bay 4"},
+    {id:"5",number:5,name:"Booth - Jade",type:"small",location:"Building A, Floor 1 · Bay 5"},
+    {id:"6",number:6,name:"Booth - Opal",type:"small",location:"Building A, Floor 1 · Bay 6"},
+    {id:"7",number:7,name:"Booth - Ruby",type:"small",location:"Building A, Floor 1 · Bay 7"},
+    {id:"8",number:8,name:"Booth - Pearl",type:"small",location:"Building A, Floor 1 · Bay 8"},
+    {id:"9",number:9,name:"Booth - Sapphire",type:"small",location:"Building A, Floor 1 · Bay 9"},
+    {id:"10",number:10,name:"Booth - Coral",type:"small",location:"Building A, Floor 2 · Bay 1"},
+    {id:"11",number:11,name:"Booth - Violet",type:"small",location:"Building A, Floor 2 · Bay 2"},
+    {id:"12",number:12,name:"Booth - Ivory",type:"small",location:"Building A, Floor 2 · Bay 3"},
+    {id:"13",number:13,name:"Booth - Sage",type:"small",location:"Building A, Floor 2 · Bay 4"},
+    {id:"14",number:14,name:"Booth - Topaz",type:"small",location:"Building A, Floor 2 · Bay 5"},
+    {id:"15",number:15,name:"Booth - Onyx",type:"small",location:"Building A, Floor 2 · Bay 6"},
+    {id:"16",number:16,name:"Booth - Fern",type:"small",location:"Building A, Floor 2 · Bay 7"},
+    {id:"17",number:17,name:"Booth - Blush",type:"small",location:"Building A, Floor 2 · Bay 8"},
+    {id:"18",number:18,name:"Booth - Teal",type:"small",location:"Building A, Floor 2 · Bay 9"},
+    {id:"19",number:19,name:"Booth - Crimson",type:"small",location:"Building A, Floor 3 · Bay 1"},
+    {id:"20",number:20,name:"Booth - Gold",type:"small",location:"Building A, Floor 3 · Bay 2"},
+    {id:"21",number:21,name:"Booth - Silver",type:"small",location:"Building A, Floor 3 · Bay 3"},
+    {id:"22",number:22,name:"Booth - Copper",type:"small",location:"Building A, Floor 3 · Bay 4"},
+    {id:"23",number:23,name:"Booth - Emerald",type:"small",location:"Building A, Floor 3 · Bay 5"},
+    {id:"24",number:24,name:"Booth - Indigo",type:"small",location:"Building A, Floor 3 · Bay 6"},
+    {id:"25",number:25,name:"Booth - Mauve",type:"small",location:"Building A, Floor 3 · Bay 7"},
+    {id:"26",number:26,name:"Booth - Bronze",type:"small",location:"Building A, Floor 3 · Bay 8"},
+    {id:"27",number:27,name:"Suite - Scarlet",type:"large",location:"Building B, Main Floor · Suite 1"},
+    {id:"28",number:28,name:"Suite - Azure",type:"large",location:"Building B, Main Floor · Suite 2"},
+    {id:"29",number:29,name:"The Grand Hall",type:"event",location:"Building C · Main Event Space"}
+  ];
+
+  const TYPE_GROUPS = { small: 'Standard Booths (26)', large: 'Premium Booths (2)', event: 'Event Spaces (1)' };
+
+  // Populate space select
+  const sel = document.getElementById('space-select');
+  const groups = {};
+  SPACES.forEach(s => {
+    if (!groups[s.type]) {
+      const og = document.createElement('optgroup');
+      og.label = TYPE_GROUPS[s.type];
+      groups[s.type] = og;
+      sel.appendChild(og);
+    }
+    const opt = document.createElement('option');
+    opt.value = s.id;
+    const displayName = s.name.includes(' - ') ? 'The ' + s.name.split(' - ')[1] : s.name;
+    opt.textContent = `#${s.number} — ${displayName}`;
+    groups[s.type].appendChild(opt);
+  });
+
+  // Pre-fill from URL param
+  const preSpace = getParam('spaceId');
+  if (preSpace) {
+    sel.value = preSpace;
+    updateSpacePreview(preSpace);
+  }
+
+  // Booking state
+  let selectedSpace = preSpace || '';
+  let selectedType  = '';
+  let selectedStart = '';
+  let calculatedEnd = '';
+
+  function getSelectedSpace() {
+    return SPACES.find(s => s.id === selectedSpace);
+  }
+
+  function updateSpacePreview(id) {
+    const space = SPACES.find(s => s.id === id);
+    const preview = document.getElementById('space-preview');
+    if (space) {
+      document.getElementById('preview-name').textContent = `#${space.number} — ${space.name}`;
+      document.getElementById('preview-location').textContent = space.location;
+      preview.style.display = 'block';
+    } else {
+      preview.style.display = 'none';
+    }
+  }
+
+  function updateSummary() {
+    const space = getSelectedSpace();
+    const sumSpace = document.getElementById('sum-space');
+    const sumType  = document.getElementById('sum-type');
+    const sumStart = document.getElementById('sum-start');
+    const sumEnd   = document.getElementById('sum-end');
+    const sumName  = document.getElementById('sum-name');
+
+    function setVal(el, val, placeholder) {
+      if (val) {
+        el.textContent = val;
+        el.classList.remove('summary-placeholder');
+      } else {
+        el.textContent = placeholder;
+        el.classList.add('summary-placeholder');
+      }
+    }
+
+    setVal(sumSpace, space ? `${space.name} (#${space.number})` : '', 'Not selected');
+    setVal(sumType, selectedType ? bookingTypeLabel(selectedType) : '', 'Not selected');
+    setVal(sumStart, selectedStart ? formatDateDisplay(selectedStart) : '', 'Not set');
+    setVal(sumEnd, calculatedEnd ? formatDateDisplay(calculatedEnd) : '', '—');
+
+    const nameVal = document.getElementById('contact-name').value.trim();
+    setVal(sumName, nameVal || '', 'Not entered');
+  }
+
+  function updateEndDate() {
+    if (!selectedStart || !selectedType) {
+      document.getElementById('end-date-group').style.display = 'none';
+      calculatedEnd = '';
+      updateSummary();
+      return;
+    }
+    calculatedEnd = getBookingEndDate(selectedStart, selectedType);
+    document.getElementById('end-date-display').value = formatDateDisplay(calculatedEnd);
+    document.getElementById('end-date-group').style.display = 'block';
+    updateSummary();
+  }
+
+  function updateDateHint() {
+    const hint = document.getElementById('date-hint');
+    const hintText = document.getElementById('date-hint-text');
+    if (!selectedType || selectedType === 'daily' || selectedType === 'weekly' || selectedType === 'monthly') {
+      hint.style.display = 'none';
+      return;
+    }
+    hint.style.display = 'flex';
+    if (selectedType === 'weekend') {
+      hintText.textContent = 'Weekend bookings must start on a Saturday.';
+    } else if (selectedType === 'weekday') {
+      hintText.textContent = 'Weekday block bookings must start on a Monday.';
+    }
+  }
+
+  // Restrict booking types based on space tier
+  function updateBookingTypeOptions() {
+    const tier = getBoothTier(selectedSpace);
+    const grid = document.getElementById('booking-type-grid');
+    const options = grid.querySelectorAll('.booking-type-option');
+    options.forEach(opt => {
+      const radio = opt.querySelector('input[name="bookingType"]');
+      if (tier === 'premium' || tier === 'event') {
+        // Premium suites & event: monthly only
+        if (radio.value !== 'monthly') {
+          opt.style.display = 'none';
+          if (radio.checked) { radio.checked = false; selectedType = ''; }
+        } else {
+          opt.style.display = '';
+        }
+      } else {
+        // Standard booths: all options
+        opt.style.display = '';
+      }
+    });
+    // Auto-select monthly for premium/event
+    if ((tier === 'premium' || tier === 'event') && selectedType !== 'monthly') {
+      const monthlyRadio = grid.querySelector('input[value="monthly"]');
+      if (monthlyRadio) { monthlyRadio.checked = true; selectedType = 'monthly'; updateDateHint(); updateEndDate(); }
+    }
+  }
+
+  // Event listeners
+  sel.addEventListener('change', function() {
+    selectedSpace = this.value;
+    updateSpacePreview(this.value);
+    updateBookingTypeOptions();
+    updateSummary();
+  });
+
+  document.querySelectorAll('input[name="bookingType"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      selectedType = this.value;
+      updateDateHint();
+      updateEndDate();
+    });
+  });
+
+  document.getElementById('start-date').addEventListener('change', function() {
+    selectedStart = this.value;
+    updateEndDate();
+  });
+
+  // Set minimum date to today
+  document.getElementById('start-date').min = todayStr();
+
+  document.getElementById('contact-name').addEventListener('input', updateSummary);
+
+  // Step navigation
+  function setStep(n) {
+    document.getElementById('form-step-1').style.display = n === 1 ? 'block' : 'none';
+    document.getElementById('form-step-2').style.display = n === 2 ? 'block' : 'none';
+
+    [1, 2, 3].forEach(i => {
+      const s = document.getElementById(`step-${i}`);
+      s.classList.remove('active', 'completed');
+      if (i < n) s.classList.add('completed');
+      if (i === n) s.classList.add('active');
+    });
+  }
+
+  document.getElementById('step1-next').addEventListener('click', function() {
+    let valid = true;
+
+    if (!selectedSpace) {
+      document.getElementById('err-space').classList.add('show');
+      document.getElementById('space-select').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('err-space').classList.remove('show');
+      document.getElementById('space-select').classList.remove('error');
+    }
+
+    if (!selectedType) {
+      document.getElementById('err-type').classList.add('show');
+      valid = false;
+    } else {
+      document.getElementById('err-type').classList.remove('show');
+    }
+
+    if (!selectedStart) {
+      document.getElementById('err-date').classList.add('show');
+      document.getElementById('start-date').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('err-date').classList.remove('show');
+      document.getElementById('start-date').classList.remove('error');
+    }
+
+    if (valid) setStep(2);
+  });
+
+  document.getElementById('step2-back').addEventListener('click', () => setStep(1));
+
+  // Stripe price mapping
+  const STRIPE_PRICES = {
+    standard: {
+      daily:   'price_1TE2QaB7J05NFD08nlffsFhX',
+      weekend: 'price_1TE2b6B7J05NFD087K52AENq',
+      weekday: 'price_1TE2QbB7J05NFD08AoiK9gm7',
+      weekly:  'price_1TE2QbB7J05NFD08wLFb21W6',
+      monthly: 'price_1TE2QbB7J05NFD08GTvytIa1'
+    },
+    premium: {
+      monthly: 'price_1TE2QoB7J05NFD08UHtd6EiT'
+    },
+    event: {
+      monthly: 'price_1TE2QoB7J05NFD08EbnMlqtW'
+    }
+  };
+
+  function getBoothTier(spaceId) {
+    const id = parseInt(spaceId);
+    if (id >= 29) return 'event';
+    if (id >= 27) return 'premium';
+    return 'standard';
+  }
+
+  // Form submit
+  document.getElementById('booking-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    let valid = true;
+
+    const name  = document.getElementById('contact-name').value.trim();
+    const email = document.getElementById('contact-email').value.trim();
+
+    if (!name) {
+      document.getElementById('err-name').classList.add('show');
+      document.getElementById('contact-name').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('err-name').classList.remove('show');
+      document.getElementById('contact-name').classList.remove('error');
+    }
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      document.getElementById('err-email').classList.add('show');
+      document.getElementById('contact-email').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('err-email').classList.remove('show');
+      document.getElementById('contact-email').classList.remove('error');
+    }
+
+    if (!valid) return;
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border-width:2px"></div> Submitting…';
+
+    try {
+      const payload = {
+        spaceId: selectedSpace,
+        bookingType: selectedType,
+        startDate: selectedStart,
+        contactName: name,
+        contactEmail: email,
+        contactPhone: document.getElementById('contact-phone').value.trim() || undefined,
+        notes: document.getElementById('booking-notes').value.trim() || undefined
+      };
+
+      const result = await api.createBooking(payload);
+      const booking = result.booking;
+      const space = getSelectedSpace();
+
+      // Determine Stripe price and redirect to checkout
+      const tier = getBoothTier(selectedSpace);
+      const stripePriceId = STRIPE_PRICES[tier] && STRIPE_PRICES[tier][selectedType];
+
+      if (stripePriceId) {
+        // Redirect to Stripe Checkout via worker
+        try {
+          const checkoutData = await api.createCheckout({
+            priceId: stripePriceId,
+            bookingId: booking.id,
+            customerEmail: email,
+            spaceName: booking.spaceName,
+            bookingType: selectedType,
+            startDate: selectedStart
+          });
+          if (checkoutData.url) {
+            window.location.href = checkoutData.url;
+            return;
+          }
+        } catch (checkoutErr) {
+          console.error('Stripe checkout error:', checkoutErr);
+          // Fall through to show success without payment
+        }
+      }
+
+      // Fallback: show success without payment (if no Stripe price found)
+      document.getElementById('success-booking-id').textContent = `Booking ID: ${booking.id}`;
+      document.getElementById('success-summary').innerHTML = `
+        <div class="summary-row"><span class="summary-label">Space</span><span class="summary-value">${booking.spaceName}</span></div>
+        <div class="summary-row"><span class="summary-label">Booking Type</span><span class="summary-value">${bookingTypeLabel(booking.bookingType)}</span></div>
+        <div class="summary-row"><span class="summary-label">Dates</span><span class="summary-value">${formatDateDisplay(booking.startDate)} – ${formatDateDisplay(booking.endDate)}</span></div>
+        <div class="summary-row"><span class="summary-label">Status</span><span class="summary-value"><span class="badge badge-yellow">Pending Payment</span></span></div>
+        <div class="summary-row" style="border:none"><span class="summary-label">Contact</span><span class="summary-value">${booking.contactEmail}</span></div>
+      `;
+
+      document.getElementById('booking-form-card').style.display = 'none';
+      document.getElementById('success-screen').style.display = 'block';
+
+      // Update step indicator
+      ['step-1','step-2','step-3'].forEach((id, i) => {
+        const s = document.getElementById(id);
+        s.classList.remove('active');
+        if (i < 2) s.classList.add('completed');
+        if (i === 2) s.classList.add('active');
+      });
+
+    } catch (err) {
+      showToast(err.message || 'Failed to submit booking. Please try again.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Submit Booking Request';
+    }
+  });
+
+  // Init step
+  setStep(1);
+  updateSummary();
+
+  // Handle Stripe return (success or cancel)
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('success') === 'true') {
+    const bookingId = urlParams.get('bookingId');
+    document.getElementById('booking-form-card').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+    document.getElementById('success-title').textContent = 'Booking Confirmed!';
+    document.getElementById('success-subtitle').textContent = 'Your payment has been processed and your space is reserved. A welcome email with next steps is on its way!';
+    document.getElementById('success-booking-id').textContent = bookingId ? `Booking ID: ${bookingId}` : '';
+    // Fetch booking details for receipt
+    if (bookingId) {
+      api.getBooking(bookingId).then(data => {
+        if (data && data.booking) {
+          const b = data.booking;
+          document.getElementById('success-summary').innerHTML = `
+            <div class="summary-row"><span class="summary-label">Space</span><span class="summary-value">${b.spaceName || ''}</span></div>
+            <div class="summary-row"><span class="summary-label">Booking Type</span><span class="summary-value">${bookingTypeLabel(b.bookingType)}</span></div>
+            <div class="summary-row"><span class="summary-label">Dates</span><span class="summary-value">${formatDateDisplay(b.startDate)} – ${formatDateDisplay(b.endDate)}</span></div>
+            <div class="summary-row"><span class="summary-label">Status</span><span class="summary-value"><span class="badge badge-green" style="background:#DCFCE7;color:#166534">Paid ✓</span></span></div>
+            <div class="summary-row" style="border:none"><span class="summary-label">Contact</span><span class="summary-value">${b.contactEmail || ''}</span></div>
+          `;
+          window._bookingReceipt = b;
+        }
+      }).catch(() => {});
+    }
+    // Update step indicator to complete
+    ['step-1','step-2','step-3'].forEach((id, i) => {
+      const s = document.getElementById(id);
+      s.classList.remove('active');
+      s.classList.add('completed');
+    });
+  }
+  if (urlParams.get('canceled') === 'true') {
+    document.getElementById('booking-form-card').style.display = 'none';
+    document.getElementById('canceled-screen').style.display = 'block';
+  }
+
+})();
+
+// Print receipt function
+function printReceipt() {
+  const b = window._bookingReceipt || {};
+  const receiptHtml = `
+    <!DOCTYPE html><html><head><title>WEC Booking Receipt</title>
+    <style>
+      body { font-family: 'Inter', Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; color: #1a1a1a; }
+      .header { text-align: center; border-bottom: 2px solid #6B2D8B; padding-bottom: 20px; margin-bottom: 30px; }
+      .header h1 { color: #6B2D8B; font-size: 1.5rem; margin: 0 0 4px; }
+      .header p { color: #666; margin: 0; font-size: 0.85rem; }
+      .receipt-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; }
+      .receipt-label { color: #666; font-weight: 500; }
+      .receipt-value { font-weight: 600; text-align: right; }
+      .total { font-size: 1.2rem; color: #6B2D8B; border-top: 2px solid #6B2D8B; margin-top: 20px; padding-top: 16px; }
+      .footer { text-align: center; margin-top: 40px; color: #999; font-size: 0.8rem; }
+      .badge { display: inline-block; background: #DCFCE7; color: #166534; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+      @media print { body { margin: 0; } }
+    </style></head><body>
+    <div class="header">
+      <h1>Women's Empowerment Center™</h1>
+      <p>415 Olympia Ave NE, Olympia, WA 98506</p>
+      <p>Booking Receipt</p>
+    </div>
+    <div class="receipt-row"><span class="receipt-label">Booking ID</span><span class="receipt-value">${b.id || 'N/A'}</span></div>
+    <div class="receipt-row"><span class="receipt-label">Space</span><span class="receipt-value">${b.spaceName || 'N/A'}</span></div>
+    <div class="receipt-row"><span class="receipt-label">Booking Type</span><span class="receipt-value">${b.bookingType || 'N/A'}</span></div>
+    <div class="receipt-row"><span class="receipt-label">Start Date</span><span class="receipt-value">${b.startDate || 'N/A'}</span></div>
+    <div class="receipt-row"><span class="receipt-label">End Date</span><span class="receipt-value">${b.endDate || 'N/A'}</span></div>
+    <div class="receipt-row"><span class="receipt-label">Contact</span><span class="receipt-value">${b.contactName || ''}<br>${b.contactEmail || ''}</span></div>
+    <div class="receipt-row"><span class="receipt-label">Status</span><span class="receipt-value"><span class="badge">Paid ✓</span></span></div>
+    <div class="receipt-row"><span class="receipt-label">Date Paid</span><span class="receipt-value">${new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' })}</span></div>
+    <div class="footer">
+      <p>Thank you for choosing the Women's Empowerment Center™</p>
+      <p>Questions? Email us at info@wecenter.org</p>
+    </div>
+    </body></html>
+  `;
+  const w = window.open('', '_blank');
+  w.document.write(receiptHtml);
+  w.document.close();
+  setTimeout(() => w.print(), 500);
+}
+</script>
+</body>
+</html>

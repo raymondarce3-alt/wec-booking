@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Browse Spaces — Women's Empowerment Center™</title>
+  <meta name="description" content="Browse all 29 booth and event spaces at the Women's Empowerment Center™. Filter by type and find the perfect space for your business.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=20260323">
+  <style>
+    .spaces-count {
+      font-size: 0.88rem;
+      color: var(--gray-500);
+      font-weight: 500;
+    }
+    .spaces-count strong { color: var(--purple); }
+    .filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .search-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      color: var(--gray-400);
+      pointer-events: none;
+    }
+    .search-input {
+      padding-left: 36px;
+      width: 220px;
+      padding-top: 9px;
+      padding-bottom: 9px;
+      font-size: 0.875rem;
+    }
+    @media (max-width: 600px) {
+      .search-input { width: 100%; }
+      .search-wrap { width: 100%; }
+      .filter-row { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* Space detail modal extras */
+    .amenity-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .amenity-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      color: var(--gray-700);
+    }
+    .amenity-item svg {
+      width: 14px;
+      height: 14px;
+      color: var(--purple);
+      flex-shrink: 0;
+    }
+    .no-results {
+      text-align: center;
+      padding: 80px 24px;
+      grid-column: 1 / -1;
+    }
+    .no-results-icon {
+      width: 80px; height: 80px;
+      background: var(--purple-pale);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .no-results-icon svg {
+      width: 36px; height: 36px;
+      fill: var(--purple);
+      opacity: .5;
+    }
+  </style>
+</head>
+<body class="page-body">
+
+<!-- ── Navigation ──────────────────────────────────────────────────────────── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="Women's Empowerment Center™ home">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.69 2 6 4.69 6 8c0 2.22 1.21 4.15 3 5.19V15h6v-1.81C16.79 12.15 18 10.22 18 8c0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm-1 12h2v2h-2v-2zm0 3h2v3h-2v-3z"/></svg>
+      </div>
+      <div>
+        <span class="nav-logo-text">Women's Empowerment Center™</span>
+        <span class="nav-logo-sub">Space Booking</span>
+      </div>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html"      class="nav-link">Home</a></li>
+      <li><a href="spaces.html"     class="nav-link active">Spaces</a></li>
+      <li><a href="calendar.html"   class="nav-link">Calendar</a></li>
+      <li><a href="membership.html" class="nav-link">Membership</a></li>
+      <li><a href="admin.html"      class="nav-link">Admin</a></li>
+      <li><a href="booking.html"    class="nav-link nav-cta">Book a Space</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<nav class="nav-mobile" id="nav-mobile" aria-label="Mobile navigation">
+  <a href="index.html"      class="nav-link">Home</a>
+  <a href="spaces.html"     class="nav-link active">Spaces</a>
+  <a href="calendar.html"   class="nav-link">Calendar</a>
+  <a href="membership.html" class="nav-link">Membership</a>
+  <a href="admin.html"      class="nav-link">Admin</a>
+  <a href="booking.html"    class="nav-link nav-cta">Book a Space</a>
+</nav>
+
+<!-- ── Page Hero ───────────────────────────────────────────────────────────── -->
+<section class="page-hero">
+  <div class="container">
+    <div class="hero-eyebrow" style="justify-content:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+      29 Professional Spaces
+    </div>
+    <h1>Browse Our Spaces</h1>
+    <p>Discover the perfect booth or event space for your business. Every space is professionally equipped and ready for your success.</p>
+  </div>
+</section>
+
+<!-- ── Main Content ─────────────────────────────────────────────────────────── -->
+<section class="section" style="padding-top:48px">
+  <div class="container">
+
+    <!-- Filter Row -->
+    <div class="filter-row">
+      <div class="filter-tabs" role="group" aria-label="Filter by space type">
+        <button class="filter-chip" data-type="" id="tab-all">All Spaces</button>
+        <button class="filter-chip" data-type="small" id="tab-small">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          Standard Booths
+        </button>
+        <button class="filter-chip" data-type="large" id="tab-large">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          Premium Suites
+        </button>
+        <button class="filter-chip" data-type="event" id="tab-event">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-right:4px"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          Event Spaces
+        </button>
+      </div>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" class="search-input" placeholder="Search spaces…" aria-label="Search spaces">
+      </div>
+    </div>
+
+    <!-- Count bar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+      <p class="spaces-count" id="spaces-count">Loading spaces…</p>
+      <div style="display:flex;gap:8px;align-items:center;font-size:.82rem;color:var(--gray-500)">
+        <span class="badge badge-small">Standard Booth</span>
+        <span class="badge badge-large">Premium Suite</span>
+        <span class="badge badge-event">Event Space</span>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid-auto" id="spaces-grid">
+      <div class="loading-overlay" style="grid-column:1/-1">
+        <div class="spinner"></div>
+        <p>Loading spaces…</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CTA Banner ───────────────────────────────────────────────────────────── -->
+<section style="background:var(--purple-pale);padding:56px 0;border-top:1px solid var(--gray-200)">
+  <div class="container container-sm" style="text-align:center">
+    <h2 style="margin-bottom:12px">Ready to Reserve Your Space?</h2>
+    <p style="margin-bottom:28px">Choose your dates and booking type — the process takes under 2 minutes.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <a href="booking.html" class="btn btn-primary btn-lg">Book a Space Now</a>
+      <a href="calendar.html" class="btn btn-secondary btn-lg">Check Availability</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ───────────────────────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.69 2 6 4.69 6 8c0 2.22 1.21 4.15 3 5.19V15h6v-1.81C16.79 12.15 18 10.22 18 8c0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm-1 12h2v2h-2v-2zm0 3h2v3h-2v-3z" fill="white"/></svg>
+          </div>
+          <div>
+            <span class="nav-logo-text">Women's Empowerment Center™</span>
+            <span class="nav-logo-sub">Space Booking System</span>
+          </div>
+        </a>
+        <p class="footer-desc">Providing professional, affordable, and inspiring spaces for women entrepreneurs, creatives, and community leaders to grow and thrive.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Spaces</h4>
+        <ul class="footer-links">
+          <li><a href="spaces.html?type=small" class="footer-link">Standard Booths (26)</a></li>
+          <li><a href="spaces.html?type=large" class="footer-link">Premium Suites (2)</a></li>
+          <li><a href="spaces.html?type=event" class="footer-link">Event Space (1)</a></li>
+          <li><a href="calendar.html" class="footer-link">Availability Calendar</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Booking</h4>
+        <ul class="footer-links">
+          <li><a href="booking.html" class="footer-link">Book a Space</a></li>
+          <li><a href="membership.html" class="footer-link">Membership Plans</a></li>
+          <li><a href="admin.html" class="footer-link">Staff Login</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-links">
+          <li><span class="footer-link">📍 Olympia WEC Campus</span></li>
+          <li><span class="footer-link">📞 (TBD) 555-0100</span></li>
+          <li><span class="footer-link">🕐 Mon–Fri 8:00 AM – 6:00 PM</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Olympia's Women's Empowerment Center™. All rights reserved.<br><span style="font-size:.75rem;opacity:.7">Built by iCoach Solutions with ❤️ for our community.</span></p>
+    </div>
+  </div>
+</footer>
+
+<!-- ── Space Detail Modal ───────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="detail-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Space Details</h3>
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <!-- filled by JS -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="modal-cancel">Close</button>
+      <a href="#" class="btn btn-primary" id="modal-book-btn">Book This Space</a>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="js/app.js?v=20260323"></script>
+<script>
+(function() {
+  // All 29 spaces — embedded so we don't need an extra API call for initial render
+  const ALL_SPACES = [
+    {id:"1",number:1,name:"Booth 1 - Blue",type:"small",location:"415 Olympia Ave NE · Bay 1",description:"A bright, energizing space perfect for creative entrepreneurs and artisans.",amenities:["High-Speed WiFi","2 Power Outlets","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"2",number:2,name:"Booth 2 - Rose",type:"small",location:"415 Olympia Ave NE · Bay 2",description:"Warm, inviting booth ideal for beauty and wellness professionals.",amenities:["High-Speed WiFi","2 Power Outlets","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"3",number:3,name:"Booth 3 - Lavender",type:"small",location:"415 Olympia Ave NE · Bay 3",description:"Calming space suited for counselors, coaches, and creatives.",amenities:["High-Speed WiFi","2 Power Outlets","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"4",number:4,name:"Booth 4 - Amber",type:"small",location:"415 Olympia Ave NE · Bay 4",description:"Sturdy work surface with strong overhead lighting for detailed work.",amenities:["High-Speed WiFi","2 Power Outlets","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"5",number:5,name:"Booth 5 - Jade",type:"small",location:"415 Olympia Ave NE · Bay 5",description:"A serene, focused workspace popular with writers and consultants.",amenities:["High-Speed WiFi","2 Power Outlets","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"6",number:6,name:"Booth 6 - Opal",type:"small",location:"415 Olympia Ave NE · Bay 6",description:"Versatile studio space with extra wall display area.",amenities:["High-Speed WiFi","2 Power Outlets","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"7",number:7,name:"Booth 7 - Ruby",type:"small",location:"415 Olympia Ave NE · Bay 7",description:"High-energy space with premium lighting, great for visual artists.",amenities:["High-Speed WiFi","2 Power Outlets","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"8",number:8,name:"Booth 8 - Pearl",type:"small",location:"415 Olympia Ave NE · Bay 8",description:"Elegant and refined, perfect for luxury goods and personal shopping.",amenities:["High-Speed WiFi","2 Power Outlets","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"9",number:9,name:"Booth 9 - Sapphire",type:"small",location:"415 Olympia Ave NE · Bay 9",description:"End-of-row booth with extra visibility and foot traffic.",amenities:["High-Speed WiFi","2 Power Outlets","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"10",number:10,name:"Booth 10 - Coral",type:"small",location:"415 Olympia Ave NE · Bay 10",description:"Vibrant and welcoming booth with great visibility.",amenities:["High-Speed WiFi","2 Power Outlets","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"11",number:11,name:"Booth 11 - Violet",type:"small",location:"415 Olympia Ave NE · Bay 11",description:"Creative space with a calming purple-toned environment.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"12",number:12,name:"Booth 12 - Ivory",type:"small",location:"415 Olympia Ave NE · Bay 12",description:"Clean white aesthetic perfect for food entrepreneurs and product demos.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"13",number:13,name:"Booth 13 - Sage",type:"small",location:"415 Olympia Ave NE · Bay 13",description:"Nature-inspired, calming space ideal for wellness coaches.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"14",number:14,name:"Booth 14 - Topaz",type:"small",location:"415 Olympia Ave NE · Bay 14",description:"Golden-hued ambiance, a favorite for jewelry designers and boutiques.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"15",number:15,name:"Booth 15 - Onyx",type:"small",location:"415 Olympia Ave NE · Bay 15",description:"Sleek, modern space great for tech entrepreneurs and photographers.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"16",number:16,name:"Booth 16 - Fern",type:"small",location:"415 Olympia Ave NE · Bay 16",description:"Fresh, botanical-inspired booth perfect for plant shops and eco-brands.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"17",number:17,name:"Booth 17 - Blush",type:"small",location:"415 Olympia Ave NE · Bay 17",description:"Soft, feminine aesthetic beloved by fashion and beauty brands.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"18",number:18,name:"Booth 18 - Teal",type:"small",location:"415 Olympia Ave NE · Bay 18",description:"Cool, professional space for consultants and service professionals.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"19",number:19,name:"Booth 19 - Crimson",type:"small",location:"415 Olympia Ave NE · Bay 19",description:"Bold, vibrant booth that makes a statement for confident brands.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"20",number:20,name:"Booth 20 - Gold",type:"small",location:"415 Olympia Ave NE · Bay 20",description:"Warm golden tones, ideal for luxury and premium product displays.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"21",number:21,name:"Booth 21 - Silver",type:"small",location:"415 Olympia Ave NE · Bay 21",description:"Clean, modern aesthetic perfect for tech and contemporary brands.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"22",number:22,name:"Booth 22 - Copper",type:"small",location:"415 Olympia Ave NE · Bay 22",description:"Warm industrial vibe, great for artisans and handmade goods.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"23",number:23,name:"Booth 23 - Emerald",type:"small",location:"415 Olympia Ave NE · Bay 23",description:"Rich green tones perfect for wellness, beauty, and holistic brands.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"24",number:24,name:"Booth 24 - Indigo",type:"small",location:"415 Olympia Ave NE · Bay 24",description:"Deep blue atmosphere ideal for creative studios and consulting.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"25",number:25,name:"Booth 25 - Mauve",type:"small",location:"415 Olympia Ave NE · Bay 25",description:"Sophisticated, muted tones for upscale retail and lifestyle brands.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"26",number:26,name:"Booth 26 - Bronze",type:"small",location:"415 Olympia Ave NE · Bay 26",description:"Warm, earthy aesthetic for artisans, craftspeople, and vintage sellers.",amenities:["High-Speed WiFi","LED Lighting","Storage Shelf","Display Hooks"],sqft:60},
+    {id:"27",number:27,name:"Booth 27 - Scarlet",type:"large",location:"415 Olympia Ave NE · Premium Suite 1",description:"Spacious premium booth with extra room for established businesses. Corner positioning with high visibility.",amenities:["High-Speed WiFi","4 Power Outlets","LED Lighting","Storage Cabinet","Display Wall","Counter Space","Climate Control"],sqft:100},
+    {id:"28",number:28,name:"Booth 28 - Azure",type:"large",location:"415 Olympia Ave NE · Premium Suite 2",description:"Premium corner suite with maximum space and professional layout for growing businesses.",amenities:["High-Speed WiFi","4 Power Outlets","LED Lighting","Storage Cabinet","Display Wall","Counter Space","Climate Control"],sqft:100},
+    {id:"29",number:29,name:"The Grand Hall",type:"event",location:"415 Olympia Ave NE · Main Event Space",description:"Full-featured venue for workshops, seminars, markets, and celebrations. Seats up to 80+ guests. $3,000/night (6 PM – 10 PM).",amenities:["High-Speed WiFi","20+ Power Outlets","Full PA System","Projection Screens","Stage Lighting","Wireless Microphones","Flexible Seating (80+)","Folding Tables","Climate Control","AV Equipment","Accessible Entrance"],sqft:1200,price:"$3,000/night",hours:"6:00 PM – 10:00 PM",includes:["Non-alcoholic beverages service","Table setup & breakdown","AV equipment (PA, projectors, microphones)","Digital content & visuals (with advance notice)"],notIncluded:["Food or food service","Alcoholic beverages (available as add-on)"],note:"Details subject to change — contact us to finalize your event package."}
+  ];
+
+  let currentFilter = '';
+  let currentSearch = '';
+  let selectedSpaceId = null;
+
+  function getFilteredSpaces() {
+    return ALL_SPACES.filter(s => {
+      const matchType = !currentFilter || s.type === currentFilter;
+      const q = currentSearch.toLowerCase();
+      const matchSearch = !q ||
+        s.name.toLowerCase().includes(q) ||
+        s.description.toLowerCase().includes(q) ||
+        s.location.toLowerCase().includes(q) ||
+        s.amenities.some(a => a.toLowerCase().includes(q));
+      return matchType && matchSearch;
+    });
+  }
+
+  function renderGrid() {
+    const spaces = getFilteredSpaces();
+    const grid = document.getElementById('spaces-grid');
+    const count = document.getElementById('spaces-count');
+
+    const typeNames = { '': 'All', small: 'Standard Booth', large: 'Premium Suite', event: 'Event Space' };
+    const total = ALL_SPACES.filter(s => !currentFilter || s.type === currentFilter).length;
+    count.innerHTML = `Showing <strong>${spaces.length}</strong> of <strong>${total}</strong> ${currentFilter ? typeNames[currentFilter] + 's' : 'spaces'}`;
+
+    if (spaces.length === 0) {
+      grid.innerHTML = `
+        <div class="no-results">
+          <div class="no-results-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          </div>
+          <h3 style="margin-bottom:8px">No spaces found</h3>
+          <p style="max-width:300px;margin:0 auto">Try adjusting your search or filter to find the right space.</p>
+          <button class="btn btn-secondary btn-sm mt-4" onclick="resetFilters()">Clear Filters</button>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = spaces.map(space => renderSpaceCard(space)).join('');
+  }
+
+  window.resetFilters = function() {
+    currentFilter = '';
+    currentSearch = '';
+    document.getElementById('search-input').value = '';
+    setActiveTab('');
+    renderGrid();
+  };
+
+  function setActiveTab(type) {
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.type === type);
+    });
+    currentFilter = type;
+  }
+
+  // Filter tabs
+  document.querySelectorAll('.filter-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      setActiveTab(btn.dataset.type);
+      renderGrid();
+    });
+  });
+
+  // Search input
+  let searchDebounce;
+  document.getElementById('search-input').addEventListener('input', function() {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(() => {
+      currentSearch = this.value.trim();
+      renderGrid();
+    }, 200);
+  });
+
+  // Space detail modal
+  window.showSpaceDetails = function(id) {
+    const space = ALL_SPACES.find(s => s.id === id);
+    if (!space) return;
+    selectedSpaceId = id;
+
+    document.getElementById('modal-title').textContent = space.name;
+    document.getElementById('modal-book-btn').href = `booking.html?spaceId=${id}`;
+
+    const badgeClass = spaceBadgeClass(space.type);
+    const amenitiesHtml = space.amenities.map(a =>
+      `<div class="amenity-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        ${a}
+      </div>`
+    ).join('');
+
+    const priceTag = space.price
+      ? `<span style="background:var(--purple-pale);color:var(--purple);padding:4px 12px;border-radius:var(--radius-full);font-size:.9rem;font-weight:700">${space.price}</span>`
+      : `<span style="background:var(--purple-pale);color:var(--purple);padding:4px 12px;border-radius:var(--radius-full);font-size:.9rem;font-weight:700">$250/mo</span>`;
+
+    const hoursHtml = space.hours
+      ? `<span style="background:#edf2ff;color:#6366f1;padding:4px 12px;border-radius:var(--radius-full);font-size:.82rem;font-weight:600">Hours: ${space.hours}</span>`
+      : '';
+
+    const includesHtml = space.includes
+      ? `<h5 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-500);margin-bottom:10px;margin-top:20px">What's Included</h5>
+         <div style="margin-bottom:16px">${space.includes.map(i => `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:.88rem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>${i}</div>`).join('')}</div>`
+      : '';
+
+    const notIncludedHtml = space.notIncluded
+      ? `<h5 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-500);margin-bottom:10px">Not Included</h5>
+         <div style="margin-bottom:16px">${space.notIncluded.map(i => `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:.88rem"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>${i}</div>`).join('')}</div>`
+      : '';
+
+    const noteHtml = space.note
+      ? `<div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:var(--radius-md);padding:12px 16px;font-size:.82rem;color:#92400e;margin-top:12px">⚠️ ${space.note}</div>`
+      : '';
+
+    document.getElementById('modal-body').innerHTML = `
+      <div style="background:linear-gradient(135deg,var(--purple-pale) 0%,var(--gold-pale) 100%);border-radius:var(--radius-md);height:160px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;position:relative">
+        <div style="width:72px;height:72px;background:rgba(107,45,139,.15);border-radius:50%;display:flex;align-items:center;justify-content:center">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="var(--purple)" opacity=".7"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="var(--purple)" stroke-width="2"/></svg>
+        </div>
+        <span class="card-badge ${badgeClass}" style="position:absolute;top:12px;left:12px">${spaceTypeLabel(space.type)}</span>
+      </div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+        <div>
+          <h4 style="font-size:1.25rem;margin-bottom:4px">${space.name}</h4>
+          <div style="font-size:.82rem;color:var(--gray-500);display:flex;align-items:center;gap:6px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${space.location}
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap">
+        <span style="background:var(--gray-100);color:var(--gray-600);padding:4px 12px;border-radius:var(--radius-full);font-size:.82rem;font-weight:600">Size: ${space.sqft.toLocaleString()} sq ft</span>
+        ${priceTag}
+        ${hoursHtml}
+      </div>
+      <p style="font-size:.9rem;margin-bottom:20px">${space.description}</p>
+      ${includesHtml}
+      ${notIncludedHtml}
+      <h5 style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gray-500);margin-bottom:10px">Amenities</h5>
+      <div class="amenity-grid">${amenitiesHtml}</div>
+      ${noteHtml}
+    `;
+
+    document.getElementById('detail-modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  function closeModal() {
+    document.getElementById('detail-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-cancel').addEventListener('click', closeModal);
+  document.getElementById('detail-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // Read URL param on load
+  const urlType = new URLSearchParams(window.location.search).get('type') || '';
+  setActiveTab(urlType);
+  renderGrid();
+
+})();
+</script>
+</body>
+</html>

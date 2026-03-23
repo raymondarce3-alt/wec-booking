@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membership — Women's Empowerment Center™</title>
+  <meta name="description" content="Join the Women's Empowerment Center™. Three membership tiers designed for every stage of your entrepreneurial journey.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .tiers-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
+    }
+
+    .membership-card .check { font-size: .7rem; }
+    .membership-card .check::before { content: '✓'; }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .875rem;
+    }
+    .comparison-table th {
+      padding: 14px 16px;
+      text-align: center;
+      font-size: .82rem;
+    }
+    .comparison-table th:first-child { text-align: left; }
+    .comparison-table td {
+      padding: 12px 16px;
+      border-top: 1px solid var(--gray-100);
+      text-align: center;
+      color: var(--gray-700);
+    }
+    .comparison-table td:first-child { text-align: left; font-weight: 500; color: var(--gray-800); }
+    .comparison-table tr:hover td { background: var(--gray-50); }
+    .comparison-table .check-mark { color: #16a34a; font-weight: 700; font-size: 1rem; }
+    .comparison-table .dash { color: var(--gray-300); }
+
+    .tier-header-community { background: var(--gray-100); color: var(--gray-700); border-radius: var(--radius-md); padding: 8px 12px; }
+    .tier-header-professional { background: var(--purple-pale); color: var(--purple-dark); border-radius: var(--radius-md); padding: 8px 12px; }
+    .tier-header-enterprise { background: var(--gold-pale); color: var(--gold-dark); border-radius: var(--radius-md); padding: 8px 12px; }
+
+    /* Signup form */
+    .signup-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--gray-200);
+      padding: 40px;
+      box-shadow: var(--shadow-sm);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    @media (max-width: 600px) {
+      .signup-card { padding: 28px 20px; }
+    }
+
+    .tier-selector {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 560px) {
+      .tier-selector { grid-template-columns: 1fr; }
+    }
+
+    .tier-radio-option { position: relative; cursor: pointer; }
+    .tier-radio-option input { position: absolute; opacity: 0; width: 0; height: 0; }
+    .tier-radio-label {
+      display: block;
+      padding: 14px 12px;
+      border-radius: var(--radius-md);
+      border: 2px solid var(--gray-200);
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .tier-radio-label:hover { border-color: var(--purple); }
+    .tier-radio-option input:checked + .tier-radio-label {
+      border-color: var(--purple);
+      background: var(--purple-pale);
+    }
+    .tier-radio-name {
+      display: block;
+      font-weight: 700;
+      font-size: .95rem;
+      color: var(--gray-800);
+      margin-bottom: 2px;
+    }
+    .tier-radio-option input:checked + .tier-radio-label .tier-radio-name { color: var(--purple); }
+    .tier-radio-price {
+      display: block;
+      font-size: .78rem;
+      color: var(--gray-500);
+    }
+
+    /* Success screen */
+    .member-success {
+      text-align: center;
+      padding: 60px 40px;
+    }
+    .member-success-icon {
+      width: 80px; height: 80px;
+      background: var(--purple-pale);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .member-success-icon svg { width: 40px; height: 40px; }
+
+    /* FAQ */
+    .faq-item {
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      padding: 20px 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gray-800);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .faq-question:hover { color: var(--purple); }
+    .faq-arrow {
+      flex-shrink: 0;
+      transition: transform var(--transition);
+      color: var(--gray-400);
+    }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); color: var(--purple); }
+    .faq-answer {
+      display: none;
+      padding-bottom: 20px;
+      font-size: .9rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+    .faq-item.open .faq-answer { display: block; }
+  </style>
+</head>
+<body class="page-body">
+
+<!-- ── Navigation ──────────────────────────────────────────────────────────── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="Women's Empowerment Center™ home">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.69 2 6 4.69 6 8c0 2.22 1.21 4.15 3 5.19V15h6v-1.81C16.79 12.15 18 10.22 18 8c0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm-1 12h2v2h-2v-2zm0 3h2v3h-2v-3z"/></svg>
+      </div>
+      <div>
+        <span class="nav-logo-text">Women's Empowerment Center™</span>
+        <span class="nav-logo-sub">Space Booking</span>
+      </div>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html"      class="nav-link">Home</a></li>
+      <li><a href="spaces.html"     class="nav-link">Spaces</a></li>
+      <li><a href="calendar.html"   class="nav-link">Calendar</a></li>
+      <li><a href="membership.html" class="nav-link active">Membership</a></li>
+      <li><a href="admin.html"      class="nav-link">Admin</a></li>
+      <li><a href="booking.html"    class="nav-link nav-cta">Book a Space</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<nav class="nav-mobile" id="nav-mobile" aria-label="Mobile navigation">
+  <a href="index.html"      class="nav-link">Home</a>
+  <a href="spaces.html"     class="nav-link">Spaces</a>
+  <a href="calendar.html"   class="nav-link">Calendar</a>
+  <a href="membership.html" class="nav-link active">Membership</a>
+  <a href="admin.html"      class="nav-link">Admin</a>
+  <a href="booking.html"    class="nav-link nav-cta">Book a Space</a>
+</nav>
+
+<!-- ── Page Hero ───────────────────────────────────────────────────────────── -->
+<section class="page-hero">
+  <div class="container">
+    <div class="hero-eyebrow" style="justify-content:center">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      Exclusive Member Benefits
+    </div>
+    <h1>Membership Plans</h1>
+    <p>Join the Women's Empowerment Center™ community and unlock priority booking, exclusive rates, and a powerful network of like-minded women entrepreneurs.</p>
+  </div>
+</section>
+
+<!-- ── Pricing Tiers ─────────────────────────────────────────────────────────── -->
+<section class="section" style="padding-top:56px">
+  <div class="container">
+    <div class="section-header">
+      <h2>Choose Your Membership Tier</h2>
+      <p>Three tiers designed for every stage of your entrepreneurial journey — from first steps to full enterprise.</p>
+    </div>
+
+    <div class="tiers-grid">
+
+      <!-- Community Tier -->
+      <div class="membership-card" id="card-community">
+        <div class="membership-tier">Community</div>
+        <div class="membership-name">Starter</div>
+        <div class="membership-price">$59<span>/mo</span></div>
+        <p style="font-size:.85rem;margin-bottom:0">Perfect for first-time entrepreneurs and creatives just beginning their journey.</p>
+        <div class="divider"></div>
+        <div class="membership-features">
+          <div class="membership-feature">
+            <span class="check"></span>Access to all 29 spaces
+          </div>
+          <div class="membership-feature">
+            <span class="check"></span>Online booking system
+          </div>
+          <div class="membership-feature">
+            <span class="check"></span>Community newsletter
+          </div>
+          <div class="membership-feature">
+            <span class="check"></span>Member directory listing
+          </div>
+          <div class="membership-feature">
+            <span class="check"></span>WEC community events access
+          </div>
+          <div class="membership-feature">
+            <span class="check"></span>5% discount on all bookings
+          </div>
+          <div class="membership-feature" style="opacity:.4">
+            <span class="check" style="background:var(--gray-100);color:var(--gray-300)"></span><s>Priority booking window</s>
+          </div>
+          <div class="membership-feature" style="opacity:.4">
+            <span class="check" style="background:var(--gray-100);color:var(--gray-300)"></span><s>Dedicated support line</s>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-block" onclick="selectTierAndScroll('community')">Get Started</button>
+      </div>
+
+      <!-- Professional Tier (Featured) -->
+      <div class="membership-card featured" id="card-professional">
+        <div class="popular-badge">★ Most Popular</div>
+        <div class="membership-tier" style="color:var(--purple)">Professional</div>
+        <div class="membership-name">Growth</div>
+        <div class="membership-price" style="color:var(--purple)">$125<span>/mo</span></div>
+        <p style="font-size:.85rem;margin-bottom:0">For established entrepreneurs ready to grow their business and community impact.</p>
+        <div class="divider"></div>
+        <div class="membership-features">
+          <div class="membership-feature">
+            <span class="check"></span>Everything in Community
+          </div>
+          <div class="membership-feature">
+            <span class="check"></span>Priority booking window (48hr early access)
+          </div>
+          <div class="membership-feature">
+            <span class="check"></span>15% discount on all bookings
+          </div>
+          <div class="membership-feature">
+            <span class="check"></span>Dedicated support line
+          </div>
+          <div class="membership-feature">
+            <span class="check"></span>Featured member profile
+          </div>
+          <div class="membership-feature">
+            <span class="check"></span>Access to exclusive workshops
+          </div>
+          <div class="membership-feature">
+            <span class="check"></span>Monthly networking events
+          </div>
+          <div class="membership-feature" style="opacity:.4">
+            <span class="check" style="background:var(--gray-100);color:var(--gray-300)"></span><s>Enterprise concierge service</s>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="selectTierAndScroll('professional')">Join Professional</button>
+      </div>
+
+      <!-- Enterprise Tier -->
+      <div class="membership-card" id="card-enterprise">
+        <div class="membership-tier" style="color:var(--gold-dark)">Enterprise</div>
+        <div class="membership-name">Elite</div>
+        <div class="membership-price" style="color:var(--gold-dark)">$299<span>/mo</span></div>
+        <p style="font-size:.85rem;margin-bottom:0">For power users, organizations, and businesses that demand the very best.</p>
+        <div class="divider"></div>
+        <div class="membership-features">
+          <div class="membership-feature">
+            <span class="check gold-check"></span>Everything in Professional
+          </div>
+          <div class="membership-feature">
+            <span class="check gold-check"></span>Exclusive 72-hour booking priority
+          </div>
+          <div class="membership-feature">
+            <span class="check gold-check"></span>25% discount on all bookings
+          </div>
+          <div class="membership-feature">
+            <span class="check gold-check"></span>Enterprise concierge service
+          </div>
+          <div class="membership-feature">
+            <span class="check gold-check"></span>Reserved parking (where available)
+          </div>
+          <div class="membership-feature">
+            <span class="check gold-check"></span>Quarterly business review meetings
+          </div>
+          <div class="membership-feature">
+            <span class="check gold-check"></span>Co-branding opportunities
+          </div>
+          <div class="membership-feature">
+            <span class="check gold-check"></span>VIP event access &amp; invitations
+          </div>
+        </div>
+        <button class="btn btn-gold btn-block" onclick="selectTierAndScroll('enterprise')">Join Enterprise</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── Feature Highlights ────────────────────────────────────────────────────── -->
+<section class="section" style="background:var(--gray-50);padding-top:56px">
+  <div class="container">
+    <div class="section-header">
+      <h2>Why Join the WEC Community?</h2>
+      <p>Membership is more than just a discount — it's access to a thriving ecosystem built for your success.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card card-body" style="padding:32px">
+        <div class="feature-icon feature-icon-purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <h4>Priority Access</h4>
+        <p style="font-size:.88rem;margin-top:8px">Members get early access to new spaces and prime booking windows before general availability opens.</p>
+      </div>
+      <div class="card card-body" style="padding:32px">
+        <div class="feature-icon feature-icon-gold">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <h4>Community Network</h4>
+        <p style="font-size:.88rem;margin-top:8px">Connect with hundreds of fellow women entrepreneurs, share resources, and collaborate on opportunities.</p>
+      </div>
+      <div class="card card-body" style="padding:32px">
+        <div class="feature-icon" style="background:#dcfce7">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <h4>Exclusive Rates</h4>
+        <p style="font-size:.88rem;margin-top:8px">Members receive discounted booking rates, special pricing on event spaces, and periodic member-only promotions.</p>
+      </div>
+      <div class="card card-body" style="padding:32px">
+        <div class="feature-icon" style="background:#dbeafe">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </div>
+        <h4>Workshops &amp; Training</h4>
+        <p style="font-size:.88rem;margin-top:8px">Professional and Enterprise members gain access to business development workshops, pitch coaching, and skill-building sessions.</p>
+      </div>
+      <div class="card card-body" style="padding:32px">
+        <div class="feature-icon feature-icon-purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        </div>
+        <h4>Dedicated Profile</h4>
+        <p style="font-size:.88rem;margin-top:8px">Your business gets a featured profile in the WEC directory, increasing visibility to foot traffic and the wider community.</p>
+      </div>
+      <div class="card card-body" style="padding:32px">
+        <div class="feature-icon feature-icon-gold">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h4>Secure &amp; Flexible</h4>
+        <p style="font-size:.88rem;margin-top:8px">Memberships are month-to-month with no lock-in contracts. Upgrade, downgrade, or cancel any time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Comparison Table ──────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Plan Comparison</h2>
+      <p>A detailed side-by-side comparison of all three membership tiers.</p>
+    </div>
+    <div class="table-wrapper">
+      <div class="table-scroll">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th style="min-width:220px">Feature</th>
+              <th><span class="tier-header-community">Community</span></th>
+              <th><span class="tier-header-professional">Professional</span></th>
+              <th><span class="tier-header-enterprise">Enterprise</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Monthly price</td><td>$59</td><td>$125</td><td>$299</td></tr>
+            <tr><td>Access to all 29 spaces</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+            <tr><td>Online booking system</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+            <tr><td>Community newsletter</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+            <tr><td>Member directory listing</td><td class="check-mark">✓</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+            <tr><td>Priority booking window</td><td class="dash">—</td><td>48 hours early</td><td>72 hours early</td></tr>
+            <tr><td>Booking discount</td><td class="dash">—</td><td class="check-mark">✓</td><td>Maximum rate</td></tr>
+            <tr><td>Dedicated support line</td><td class="dash">—</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+            <tr><td>Featured business profile</td><td class="dash">—</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+            <tr><td>Workshop &amp; training access</td><td class="dash">—</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+            <tr><td>Monthly networking events</td><td class="dash">—</td><td class="check-mark">✓</td><td class="check-mark">✓</td></tr>
+            <tr><td>Concierge service</td><td class="dash">—</td><td class="dash">—</td><td class="check-mark">✓</td></tr>
+            <tr><td>Co-branding opportunities</td><td class="dash">—</td><td class="dash">—</td><td class="check-mark">✓</td></tr>
+            <tr><td>Quarterly business review</td><td class="dash">—</td><td class="dash">—</td><td class="check-mark">✓</td></tr>
+            <tr><td>VIP event invitations</td><td class="dash">—</td><td class="dash">—</td><td class="check-mark">✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Sign Up Form ──────────────────────────────────────────────────────────── -->
+<section class="section" style="background:var(--gray-50)" id="signup-section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Become a Member Today</h2>
+      <p>Complete the form below to apply for membership. Our team will be in touch within 24 hours.</p>
+    </div>
+
+    <div class="signup-card" id="signup-card">
+      <form id="membership-form" novalidate>
+        <!-- Tier selector -->
+        <div class="form-group">
+          <label>Select Your Membership Tier <span class="required">*</span></label>
+          <div class="tier-selector">
+            <label class="tier-radio-option">
+              <input type="radio" name="tier" value="community">
+              <span class="tier-radio-label">
+                <span class="tier-radio-name">Community</span>
+                <span class="tier-radio-price">Starter · $59/mo</span>
+              </span>
+            </label>
+            <label class="tier-radio-option">
+              <input type="radio" name="tier" value="professional" id="tier-professional">
+              <span class="tier-radio-label">
+                <span class="tier-radio-name">Professional</span>
+                <span class="tier-radio-price">Growth · $125/mo</span>
+              </span>
+            </label>
+            <label class="tier-radio-option">
+              <input type="radio" name="tier" value="enterprise">
+              <span class="tier-radio-label">
+                <span class="tier-radio-name">Enterprise</span>
+                <span class="tier-radio-price">Elite · $299/mo</span>
+              </span>
+            </label>
+          </div>
+          <div class="field-error" id="err-tier">Please select a membership tier.</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="member-name">Full Name <span class="required">*</span></label>
+            <input type="text" id="member-name" placeholder="Jane Smith" required autocomplete="name">
+            <div class="field-error" id="err-mem-name">Please enter your full name.</div>
+          </div>
+          <div class="form-group">
+            <label for="member-phone">Phone Number</label>
+            <input type="tel" id="member-phone" placeholder="(555) 123-4567" autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="member-email">Email Address <span class="required">*</span></label>
+          <input type="email" id="member-email" placeholder="jane@example.com" required autocomplete="email">
+          <div class="field-error" id="err-mem-email">Please enter a valid email address.</div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="member-business">Business Name</label>
+            <input type="text" id="member-business" placeholder="My Beautiful Business">
+          </div>
+          <div class="form-group">
+            <label for="member-business-type">Business Type</label>
+            <select id="member-business-type">
+              <option value="">— Select type —</option>
+              <option>Retail / Product Sales</option>
+              <option>Beauty &amp; Wellness</option>
+              <option>Food &amp; Beverage</option>
+              <option>Arts &amp; Crafts</option>
+              <option>Fashion &amp; Apparel</option>
+              <option>Health &amp; Fitness</option>
+              <option>Consulting / Coaching</option>
+              <option>Technology</option>
+              <option>Education &amp; Training</option>
+              <option>Events &amp; Entertainment</option>
+              <option>Photography / Media</option>
+              <option>Non-profit / Community</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="member-notes">Tell Us About Your Business</label>
+          <textarea id="member-notes" placeholder="Briefly describe what you do, what you're hoping to get from membership, and any questions you have for our team…" style="min-height:100px"></textarea>
+          <div class="field-hint">Optional — helps us match you with the right resources.</div>
+        </div>
+
+        <div class="alert alert-info" style="font-size:.85rem;margin-bottom:24px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Pricing is currently being finalized. Submitting this form registers your interest and our team will follow up with confirmed rates and onboarding details.</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-block" id="membership-submit">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Submit Membership Application
+        </button>
+      </form>
+    </div>
+
+    <!-- Success Screen -->
+    <div class="signup-card member-success" id="member-success" style="display:none">
+      <div class="member-success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 style="margin-bottom:8px">Application Received!</h2>
+      <p style="font-size:1.05rem;max-width:460px;margin:0 auto 24px">Thank you for applying to join the Women's Empowerment Center™ community. Our team will reach out within 24 hours.</p>
+      <div style="background:var(--gray-50);border-radius:var(--radius-lg);padding:20px;max-width:420px;margin:0 auto 28px;text-align:left" id="member-success-summary"></div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="spaces.html" class="btn btn-primary">Browse Spaces</a>
+        <a href="booking.html" class="btn btn-secondary">Book a Space</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ──────────────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container container-sm">
+    <div class="section-header">
+      <h2>Frequently Asked Questions</h2>
+    </div>
+    <div id="faq-list">
+      <div class="faq-item">
+        <button class="faq-question">
+          Do I need a membership to book a space?
+          <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">No — anyone can book a space without a membership. Membership unlocks priority access, discounted rates, and community benefits.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          Is there a minimum commitment period?
+          <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">Memberships are month-to-month with no lock-in contracts. You can upgrade, downgrade, or cancel any time with no penalty.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          What does "priority booking window" mean?
+          <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">Professional members can book spaces 48 hours before general availability opens. Enterprise members get 72 hours. This means the best slots go to members first.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          Can I upgrade my membership tier later?
+          <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">Absolutely. You can upgrade or downgrade your tier at any time. Changes take effect at the start of the next billing cycle.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          Are memberships for individuals or businesses?
+          <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">Both! Individual entrepreneurs, sole traders, and registered businesses are all welcome. The Enterprise tier is especially suited for organizations with multiple team members.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          When will pricing be announced?
+          <svg class="faq-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="faq-answer">Pricing is being finalized and will be announced soon. Submit your application now to secure your place and be among the first to know about our founding member rates.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ───────────────────────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.69 2 6 4.69 6 8c0 2.22 1.21 4.15 3 5.19V15h6v-1.81C16.79 12.15 18 10.22 18 8c0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm-1 12h2v2h-2v-2zm0 3h2v3h-2v-3z" fill="white"/></svg>
+          </div>
+          <div>
+            <span class="nav-logo-text">Women's Empowerment Center™</span>
+            <span class="nav-logo-sub">Space Booking System</span>
+          </div>
+        </a>
+        <p class="footer-desc">Providing professional, affordable, and inspiring spaces for women entrepreneurs, creatives, and community leaders.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Spaces</h4>
+        <ul class="footer-links">
+          <li><a href="spaces.html?type=small" class="footer-link">Standard Booths (26)</a></li>
+          <li><a href="spaces.html?type=large" class="footer-link">Premium Suites (2)</a></li>
+          <li><a href="spaces.html?type=event" class="footer-link">Event Spaces (1)</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Membership</h4>
+        <ul class="footer-links">
+          <li><a href="membership.html#card-community" class="footer-link">Community Tier</a></li>
+          <li><a href="membership.html#card-professional" class="footer-link">Professional Tier</a></li>
+          <li><a href="membership.html#card-enterprise" class="footer-link">Enterprise Tier</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-links">
+          <li><span class="footer-link">📍 Olympia WEC Campus</span></li>
+          <li><span class="footer-link">🕐 Mon–Fri 8:00 AM – 6:00 PM</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Olympia's Women's Empowerment Center™. All rights reserved.<br><span style="font-size:.75rem;opacity:.7">Built by iCoach Solutions with ❤️ for our community.</span></p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+<script src="js/app.js"></script>
+<script>
+(function() {
+
+  const TIER_LABELS = { community: 'Community (Starter)', professional: 'Professional (Growth)', enterprise: 'Enterprise (Elite)' };
+
+  // Tier card CTA → scroll and select form tier
+  window.selectTierAndScroll = function(tier) {
+    const radio = document.querySelector(`input[name="tier"][value="${tier}"]`);
+    if (radio) radio.checked = true;
+    document.getElementById('signup-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const item = this.closest('.faq-item');
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // Membership form submit
+  document.getElementById('membership-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    let valid = true;
+
+    const tier  = document.querySelector('input[name="tier"]:checked');
+    const name  = document.getElementById('member-name').value.trim();
+    const email = document.getElementById('member-email').value.trim();
+
+    if (!tier) {
+      document.getElementById('err-tier').classList.add('show');
+      valid = false;
+    } else {
+      document.getElementById('err-tier').classList.remove('show');
+    }
+
+    if (!name) {
+      document.getElementById('err-mem-name').classList.add('show');
+      document.getElementById('member-name').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('err-mem-name').classList.remove('show');
+      document.getElementById('member-name').classList.remove('error');
+    }
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      document.getElementById('err-mem-email').classList.add('show');
+      document.getElementById('member-email').classList.add('error');
+      valid = false;
+    } else {
+      document.getElementById('err-mem-email').classList.remove('show');
+      document.getElementById('member-email').classList.remove('error');
+    }
+
+    if (!valid) return;
+
+    const btn = document.getElementById('membership-submit');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border-width:2px"></div> Submitting…';
+
+    try {
+      const payload = {
+        name,
+        email,
+        phone: document.getElementById('member-phone').value.trim() || undefined,
+        tier: tier.value,
+        businessName: document.getElementById('member-business').value.trim() || undefined,
+        businessType: document.getElementById('member-business-type').value || undefined,
+        notes: document.getElementById('member-notes').value.trim() || undefined
+      };
+
+      const result = await api.createMember(payload);
+      const member = result.member;
+
+      document.getElementById('member-success-summary').innerHTML = `
+        <div class="summary-row"><span class="summary-label">Name</span><span class="summary-value">${member.name}</span></div>
+        <div class="summary-row"><span class="summary-label">Email</span><span class="summary-value">${member.email}</span></div>
+        <div class="summary-row"><span class="summary-label">Tier</span><span class="summary-value">${TIER_LABELS[member.tier]}</span></div>
+        ${member.businessName ? `<div class="summary-row"><span class="summary-label">Business</span><span class="summary-value">${member.businessName}</span></div>` : ''}
+        <div class="summary-row" style="border:none"><span class="summary-label">Member Since</span><span class="summary-value">${member.joinDate}</span></div>
+      `;
+
+      document.getElementById('signup-card').style.display = 'none';
+      document.getElementById('member-success').style.display = 'block';
+      showToast('Welcome to the WEC community!', 'success');
+    } catch (err) {
+      showToast(err.message || 'Failed to submit application. Please try again.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Submit Membership Application';
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

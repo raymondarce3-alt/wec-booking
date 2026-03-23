@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Women's Empowerment Center™ — Space Booking</title>
+  <meta name="description" content="Book booth and event spaces at the Women's Empowerment Center™. 29 spaces available for small businesses, entrepreneurs, and community members.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* ── Hero Floor Plan ── */
+    @keyframes su{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .hero-tooltip{position:fixed;pointer-events:none;background:#2d2d2d;color:#fff;padding:10px 14px;border-radius:10px;font-size:.8rem;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:1000;opacity:0;transition:opacity .15s;max-width:220px;font-weight:500}
+    .hero-tooltip.show{opacity:1}
+    .hero-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;padding:1rem}
+    .hero-modal-overlay.open{opacity:1;pointer-events:auto}
+    .hero-modal{background:#fff;border-radius:16px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
+    .hero-modal-header{background:linear-gradient(135deg,#6B2D8B,#8b45b0);color:#fff;padding:1.5rem}
+    .hero-modal-header h2{font-size:1.2rem;font-weight:800;font-family:'Playfair Display',serif;color:#fff}
+    .hero-modal-header p{font-size:.8rem;opacity:.8;margin-top:.15rem}
+    .hero-modal-body{padding:1.5rem}
+    .hero-modal-row{display:flex;justify-content:space-between;padding:.45rem 0;border-bottom:1px solid #f0f0f0;font-size:.85rem}
+    .hero-modal-row:last-child{border-bottom:none}
+    .hero-modal-row .label{color:#6b6b6b}
+    .hero-modal-row .value{font-weight:600}
+    .hero-modal-footer{padding:1rem 1.5rem;border-top:1px solid #f0f0f0;display:flex;gap:.5rem}
+    .hero-modal-book{flex:1;background:linear-gradient(135deg,#6B2D8B,#8b45b0);color:#fff;border:none;padding:.7rem;border-radius:10px;font-family:inherit;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .2s;text-align:center;text-decoration:none;display:block}
+    .hero-modal-book:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(107,45,139,.35)}
+    .hero-modal-book:disabled{opacity:.5;cursor:not-allowed;transform:none}
+    .hero-modal-close{flex:0;background:#f0f0f0;color:#666;border:none;padding:.7rem 1rem;border-radius:10px;font-family:inherit;font-weight:600;cursor:pointer}
+    @media(max-width:900px){
+      .hero-split{grid-template-columns:1fr!important;gap:32px!important}
+      .hero-floorplan-card{max-width:420px!important;margin:0 auto!important}
+    }
+    @media(max-width:480px){
+      .hero-floorplan-card{padding:16px 12px 14px!important}
+    }
+    /* ── Index-specific styles ── */
+    .how-it-works .step-card {
+      text-align: center;
+      padding: 36px 24px;
+      position: relative;
+    }
+    .how-it-works .step-number {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--purple) 0%, var(--purple-light) 100%);
+      color: white;
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 16px rgba(107,45,139,.3);
+    }
+    .testimonial-card {
+      background: white;
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+    }
+    .testimonial-card blockquote {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--gray-700);
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .testimonial-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      color: white;
+      flex-shrink: 0;
+    }
+    .cta-section {
+      background: linear-gradient(135deg, var(--purple-dark) 0%, var(--purple) 60%, var(--purple-light) 100%);
+      padding: 80px 0;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: rgba(212,168,67,.1);
+    }
+    .cta-section h2 { color: white; margin-bottom: 16px; }
+    .cta-section p { color: rgba(255,255,255,.75); font-size: 1.1rem; margin-bottom: 36px; max-width: 520px; margin-left: auto; margin-right: auto; }
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .type-card {
+      border-radius: var(--radius-xl);
+      padding: 36px 28px;
+      text-align: center;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition);
+      text-decoration: none;
+      display: block;
+    }
+    .type-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-xl); }
+    .type-card-small {
+      background: var(--purple-pale);
+      border-color: var(--purple-pale);
+    }
+    .type-card-small:hover { border-color: var(--purple); }
+    .type-card-large {
+      background: var(--gold-pale);
+      border-color: var(--gold-pale);
+    }
+    .type-card-large:hover { border-color: var(--gold); }
+    .type-card-event {
+      background: #edf2ff;
+      border-color: #edf2ff;
+    }
+    .type-card-event:hover { border-color: #6366f1; }
+    .type-card-icon {
+      width: 64px; height: 64px;
+      border-radius: var(--radius-lg);
+      margin: 0 auto 20px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .type-card-icon svg { width: 32px; height: 32px; }
+    .type-card-count {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 6px;
+    }
+    .type-card h3 { font-size: 1.3rem; margin-bottom: 10px; }
+    .type-card p { font-size: 0.88rem; margin: 0; }
+    @media(max-width:768px){ .type-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body class="page-body">
+
+<!-- ── Navigation ──────────────────────────────────────────────────────────── -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="Women's Empowerment Center™ home">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.69 2 6 4.69 6 8c0 2.22 1.21 4.15 3 5.19V15h6v-1.81C16.79 12.15 18 10.22 18 8c0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm-1 12h2v2h-2v-2zm0 3h2v3h-2v-3z"/></svg>
+      </div>
+      <div>
+        <span class="nav-logo-text">Women's Empowerment Center™</span>
+        <span class="nav-logo-sub">Space Booking</span>
+      </div>
+    </a>
+    <ul class="nav-links" role="list">
+      <li><a href="index.html"      class="nav-link active">Home</a></li>
+      <li><a href="spaces.html"     class="nav-link">Spaces</a></li>
+      <li><a href="calendar.html"   class="nav-link">Calendar</a></li>
+      <li><a href="membership.html" class="nav-link">Membership</a></li>
+      <li><a href="admin.html"      class="nav-link">Admin</a></li>
+      <li><a href="booking.html"    class="nav-link nav-cta">Book a Space</a></li>
+    </ul>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<nav class="nav-mobile" id="nav-mobile" aria-label="Mobile navigation">
+  <a href="index.html"      class="nav-link active">Home</a>
+  <a href="spaces.html"     class="nav-link">Spaces</a>
+  <a href="calendar.html"   class="nav-link">Calendar</a>
+  <a href="membership.html" class="nav-link">Membership</a>
+  <a href="admin.html"      class="nav-link">Admin</a>
+  <a href="booking.html"    class="nav-link nav-cta">Book a Space</a>
+</nav>
+
+<!-- ── Hero with Interactive Floor Plan ──────────────────────────────────── -->
+<section class="hero" aria-labelledby="hero-heading" style="padding-bottom:60px">
+  <div class="container">
+    <div class="hero-split" style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:stretch">
+      <!-- Left: Text -->
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Empowering Women in Business
+        </div>
+        <h1 id="hero-heading">Your <span>Space</span> to<br>Grow &amp; Thrive</h1>
+        <p>The Women's Empowerment Center™ offers 29 professionally equipped booth and event spaces — designed to help women entrepreneurs launch, build, and scale their businesses.</p>
+        <div class="hero-actions">
+          <a href="spaces.html" class="btn btn-gold btn-xl">Browse Spaces</a>
+          <a href="booking.html" class="btn btn-secondary btn-xl" style="background:rgba(255,255,255,.15);color:white;border-color:rgba(255,255,255,.4)">Book Now</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <span class="hero-stat-num">28</span>
+            <span class="hero-stat-lbl">Bookable Spaces</span>
+          </div>
+          <div>
+            <span class="hero-stat-num">5</span>
+            <span class="hero-stat-lbl">Booking Types</span>
+          </div>
+          <div>
+            <span class="hero-stat-num">3</span>
+            <span class="hero-stat-lbl">Space Categories</span>
+          </div>
+          <div>
+            <span class="hero-stat-num">∞</span>
+            <span class="hero-stat-lbl">Possibilities</span>
+          </div>
+        </div>
+      </div>
+      <!-- Right: Interactive Floor Plan in White Card -->
+      <div class="hero-floorplan-card" style="background:white;border-radius:16px;padding:16px 14px 14px;box-shadow:0 20px 60px rgba(0,0,0,.25);position:relative;max-width:420px;max-height:520px;margin-left:auto;display:flex;flex-direction:column;justify-content:center;overflow:hidden">
+        <div style="text-align:center;margin-bottom:6px">
+          <h3 style="font-family:'Playfair Display',serif;font-size:.95rem;color:#6B2D8B;margin-bottom:1px">Interactive Floor Plan</h3>
+          <p style="font-size:.7rem;color:#999;margin:0">40' × 70' · 2,802 sq ft · Click any booth</p>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:6px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:4px;font-size:.65rem;color:#555"><div style="width:10px;height:10px;border-radius:2px;background:#10B981"></div>Daily $75</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:.65rem;color:#555"><div style="width:10px;height:10px;border-radius:2px;background:#3B82F6"></div>Weekly $300</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:.65rem;color:#555"><div style="width:10px;height:10px;border-radius:2px;background:#8B4789"></div>Monthly $600</div>
+          <div style="display:flex;align-items:center;gap:4px;font-size:.65rem;color:#555"><div style="width:10px;height:10px;border-radius:2px;background:#F59E0B"></div>Premium $750</div>
+        </div>
+        <div class="hero-map-wrap" style="overflow:hidden;border-radius:12px;background:#fff;border:1px solid #e8e0f0;max-height:420px">
+          <svg id="heroMap" viewBox="30 15 370 565" width="100%" style="display:block;max-height:420px"></svg>
+        </div>
+      </div>
+<!-- Hero Floor Plan Tooltip -->
+<div class="hero-tooltip" id="heroTooltip"></div>
+<!-- Hero Floor Plan Modal -->
+<div class="hero-modal-overlay" id="heroModalOverlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="hero-modal" onclick="event.stopPropagation()">
+    <div class="hero-modal-header">
+      <h2 id="heroModalTitle">Booth 1</h2>
+      <p id="heroModalSub">100 sq ft</p>
+    </div>
+    <div class="hero-modal-body" id="heroModalBody"></div>
+    <div class="hero-modal-footer">
+      <a class="hero-modal-book" id="heroModalBtn" href="booking.html">Request Booking</a>
+      <button class="hero-modal-close" onclick="document.getElementById('heroModalOverlay').classList.remove('open')">Close</button>
+    </div>
+  </div>
+</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Space Types ──────────────────────────────────────────────────────────── -->
+<section class="section" aria-labelledby="types-heading">
+  <div class="container">
+    <div class="section-header">
+      <h2 id="types-heading">Find Your Perfect Space</h2>
+      <p>From intimate solo booths to full event halls — we have the right space for every vision and venture.</p>
+    </div>
+    <div class="type-grid">
+      <a href="spaces.html?type=small" class="type-card type-card-small">
+        <div class="type-card-icon" style="background:var(--purple-pale)">
+          <svg viewBox="0 0 24 24" fill="var(--purple)"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="type-card-count" style="color:var(--purple)">26 Spaces</div>
+        <h3>Standard Booths</h3>
+        <p style="color:var(--purple-dark)">60 sq ft each. Perfect for solo entrepreneurs, artisans, and creatives. Private, well-lit, and fully equipped.</p>
+        <div style="margin-top:16px;font-size:.82rem;font-weight:600;color:var(--purple)">Explore Standard Booths →</div>
+      </a>
+      <a href="spaces.html?type=premium" class="type-card type-card-large">
+        <div class="type-card-icon" style="background:var(--gold-pale)">
+          <svg viewBox="0 0 24 24" fill="var(--gold-dark)"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+        </div>
+        <div class="type-card-count" style="color:var(--gold-dark)">2 Spaces</div>
+        <h3>Premium Suites</h3>
+        <p style="color:var(--gray-700)">100 sq ft each. Spacious corner suites (Booths 7 & 10) with premium positioning and extra space for established businesses.</p>
+        <div style="margin-top:16px;font-size:.82rem;font-weight:600;color:var(--gold-dark)">Explore Premium Suites →</div>
+      </a>
+      <a href="spaces.html?type=event" class="type-card type-card-event">
+        <div class="type-card-icon" style="background:#edf2ff">
+          <svg viewBox="0 0 24 24" fill="#6366f1"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="type-card-count" style="color:#6366f1">1 Space</div>
+        <h3>Event Space</h3>
+        <p style="color:var(--gray-700)">Full-featured venue for workshops, seminars, markets, and celebrations. Seats up to 80+ guests.</p>
+        <div style="margin-top:16px;font-size:.82rem;font-weight:600;color:#6366f1">Explore Event Space →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ── How It Works ─────────────────────────────────────────────────────────── -->
+<section class="section how-it-works" aria-labelledby="how-heading">
+  <div class="container">
+    <div class="section-header">
+      <h2 id="how-heading">Booking Made Simple</h2>
+      <p>Reserve your space in minutes. No phone calls, no waiting — book online any time, day or night.</p>
+    </div>
+    <div class="grid-4">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h4>Browse Spaces</h4>
+        <p style="font-size:.88rem;margin-top:8px">Filter by type, size, and amenities to find your perfect match.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h4>Choose Dates</h4>
+        <p style="font-size:.88rem;margin-top:8px">Select your booking period — daily, weekend, weekday, weekly, or monthly.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h4>Submit Request</h4>
+        <p style="font-size:.88rem;margin-top:8px">Fill in your contact details and any special notes. No payment required upfront.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <h4>Get Confirmed</h4>
+        <p style="font-size:.88rem;margin-top:8px">Our team reviews and approves your booking. You'll receive confirmation by email.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Booking Periods ──────────────────────────────────────────────────────── -->
+<section class="section" style="background:var(--gray-50)" aria-labelledby="periods-heading">
+  <div class="container">
+    <div class="section-header">
+      <h2 id="periods-heading">Flexible Booking Periods</h2>
+      <p>We offer six booking types to fit every need — from a single day to a full year.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card card-body" style="padding:28px;border-radius:var(--radius-lg)">
+        <div class="feature-icon feature-icon-purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <h4>Daily</h4>
+        <p style="font-size:.88rem;margin-top:8px">Book any single day. Minimum booking period — great for testing a space before committing.</p>
+      </div>
+      <div class="card card-body" style="padding:28px;border-radius:var(--radius-lg)">
+        <div class="feature-icon feature-icon-gold">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+        </div>
+        <h4>Weekend Block</h4>
+        <p style="font-size:.88rem;margin-top:8px">Saturday &amp; Sunday block. Perfect for market days, pop-up events, and weekend vendors.</p>
+      </div>
+      <div class="card card-body" style="padding:28px;border-radius:var(--radius-lg)">
+        <div class="feature-icon" style="background:#edf2ff">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M7 14h10"/></svg>
+        </div>
+        <h4>Weekday Block</h4>
+        <p style="font-size:.88rem;margin-top:8px">Monday through Friday block. Ideal for professionals, consultants, and service businesses.</p>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center;gap:24px;margin-top:24px;flex-wrap:wrap">
+      <div class="card card-body" style="padding:28px;border-radius:var(--radius-lg);flex:0 1 calc(33.333% - 16px);max-width:calc(33.333% - 16px)">
+        <div class="feature-icon feature-icon-purple">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h4>Weekly</h4>
+        <p style="font-size:.88rem;margin-top:8px">7 consecutive days from your chosen start date. Great for short-term residencies or launches.</p>
+      </div>
+      <div class="card card-body" style="padding:28px;border-radius:var(--radius-lg);flex:0 1 calc(33.333% - 16px);max-width:calc(33.333% - 16px)">
+        <div class="feature-icon feature-icon-gold">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        </div>
+        <h4>Monthly</h4>
+        <p style="font-size:.88rem;margin-top:8px">A full calendar month. Best value for regular vendors establishing a consistent presence.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Testimonials ─────────────────────────────────────────────────────────── -->
+<section class="section" aria-labelledby="testimonials-heading">
+  <div class="container">
+    <div class="section-header">
+      <h2 id="testimonials-heading">What Our Community Says</h2>
+      <p>Real stories from the women who call the Women's Empowerment Center™ their business home.</p>
+    </div>
+    <div class="grid-3">
+      <div class="testimonial-card">
+        <blockquote>"Booking my booth at the WEC was the best business decision I've made. The online system is so easy, and the space is absolutely perfect for my jewelry business."</blockquote>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:var(--purple)">M</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem">Maria S.</div>
+            <div style="font-size:.78rem;color:var(--gray-500)">Jewelry Designer · Booth 7</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>"I love that I can book a weekday block and know exactly where I'll be all week. The large booth gives me all the space I need to serve my clients professionally."</blockquote>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:var(--gold-dark)">T</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem">Tanya R.</div>
+            <div style="font-size:.78rem;color:var(--gray-500)">Life Coach · Suite 20</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>"We host our monthly empowerment workshops in The Grand Hall. The AV setup is professional, the space is stunning, and the booking process takes two minutes."</blockquote>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#6366f1">D</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem">Dr. Denise W.</div>
+            <div style="font-size:.78rem;color:var(--gray-500)">Workshop Facilitator · Grand Hall</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Membership CTA ───────────────────────────────────────────────────────── -->
+<section class="section" style="background:var(--gold-pale);border-top:1px solid var(--gray-200)">
+  <div class="container container-sm" style="text-align:center">
+    <div style="display:inline-flex;align-items:center;gap:8px;background:var(--gold-pale);border:1.5px solid var(--gold);padding:6px 16px;border-radius:var(--radius-full);font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--gold-dark);margin-bottom:20px">
+      ★ Membership Benefits
+    </div>
+    <h2>Become a Member &amp; Unlock More</h2>
+    <p style="margin:16px 0 32px;font-size:1.05rem">Members enjoy priority booking, exclusive rates, and access to our full community network. Three tiers designed for every stage of your journey.</p>
+    <a href="membership.html" class="btn btn-gold btn-lg">View Membership Tiers</a>
+  </div>
+</section>
+
+<!-- ── CTA Banner ───────────────────────────────────────────────────────────── -->
+<section class="cta-section" aria-labelledby="cta-heading">
+  <div class="container container-sm" style="position:relative;z-index:1">
+    <div class="hero-eyebrow" style="display:inline-flex;margin-bottom:20px">Ready to Get Started?</div>
+    <h2 id="cta-heading">Reserve Your Space Today</h2>
+    <p>Join hundreds of women entrepreneurs who have grown their businesses at the Women's Empowerment Center™. Your journey starts with a single booking.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <a href="booking.html" class="btn btn-gold btn-xl">Book Your Space Now</a>
+      <a href="spaces.html" class="btn btn-xl" style="background:rgba(255,255,255,.15);color:white;border:2px solid rgba(255,255,255,.4)">Browse All Spaces</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ───────────────────────────────────────────────────────────────── -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.69 2 6 4.69 6 8c0 2.22 1.21 4.15 3 5.19V15h6v-1.81C16.79 12.15 18 10.22 18 8c0-3.31-2.69-6-6-6zm0 2c2.21 0 4 1.79 4 4s-1.79 4-4 4-4-1.79-4-4 1.79-4 4-4zm-1 12h2v2h-2v-2zm0 3h2v3h-2v-3z" fill="white"/></svg>
+          </div>
+          <div>
+            <span class="nav-logo-text">Women's Empowerment Center™</span>
+            <span class="nav-logo-sub">Space Booking System</span>
+          </div>
+        </a>
+        <p class="footer-desc">Providing professional, affordable, and inspiring spaces for women entrepreneurs, creatives, and community leaders to grow and thrive.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Spaces</h4>
+        <ul class="footer-links">
+          <li><a href="spaces.html?type=small" class="footer-link">Standard Booths (26)</a></li>
+          <li><a href="spaces.html?type=premium" class="footer-link">Premium Suites (2)</a></li>
+          <li><a href="spaces.html?type=event" class="footer-link">Event Space (1)</a></li>
+          <li><a href="calendar.html" class="footer-link">Availability Calendar</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Booking</h4>
+        <ul class="footer-links">
+          <li><a href="booking.html" class="footer-link">Book a Space</a></li>
+          <li><a href="membership.html" class="footer-link">Membership Plans</a></li>
+          <li><a href="admin.html" class="footer-link">Staff Login</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul class="footer-links">
+          <li><span class="footer-link">📍 Olympia WEC Campus</span></li>
+          <li><span class="footer-link">📞 (TBD) 555-0100</span></li>
+          <li><span class="footer-link">🕐 Mon–Fri 8:00 AM – 6:00 PM</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Olympia's Women's Empowerment Center™. All rights reserved.<br><span style="font-size:.75rem;opacity:.7">Built by iCoach Solutions with ❤️ for our community.</span></p>
+    </div>
+  </div>
+</footer>
+
+<div id="toast-container"></div>
+<script src="js/app.js"></script>
+<script>
+(function(){
+  var TIERS={
+    daily:{name:'Daily',price:'$75/day',color:'#10B981',period:'per day'},
+    weekly:{name:'Weekly',price:'$300/week',color:'#3B82F6',period:'per week'},
+    monthly:{name:'Monthly',price:'$600/month',color:'#8B4789',period:'per month'},
+    premiumMonthly:{name:'Premium Monthly',price:'$750/month',color:'#F59E0B',period:'per month'}
+  };
+  var booths=[
+    {n:1,tier:'monthly'},{n:2,tier:'monthly'},{n:3,tier:'monthly'},{n:4,tier:'monthly'},
+    {n:5,tier:'monthly'},{n:6,tier:'monthly'},{n:7,tier:'premiumMonthly'},{n:8,tier:'monthly'},
+    {n:9,tier:'monthly'},{n:10,tier:'premiumMonthly'},{n:11,tier:'weekly'},{n:12,tier:'weekly'},
+    {n:13,tier:'weekly'},{n:14,tier:'weekly'},{n:15,tier:'weekly'},{n:16,tier:'weekly'},
+    {n:17,tier:'daily'},{n:18,tier:'daily'},{n:19,tier:'daily'},{n:20,tier:'daily'},
+    {n:21,tier:'daily'},{n:22,tier:'daily'},{n:23,tier:'daily'},{n:24,tier:'daily'},
+    {n:25,tier:'daily'},{n:26,tier:'daily'},{n:27,tier:'daily'},{n:28,tier:'daily'}
+  ];
+  var B=55,G=6,A8=48,A5=30,bx=60,by=40;
+  var COL_L=bx,COL_CL=bx+B+A8,COL_CR=COL_CL+B,COL_R=COL_CR+B+A8;
+  var bw=COL_R+B-bx;
+  var SLOT=B+G;
+  var ROW_START=by+B+A5+30;
+  var bh=B+A5+6*SLOT-G+50;
+  var NS='http://www.w3.org/2000/svg';
+
+  function pos(n){
+    if(n>=1&&n<=6)return{x:COL_L,y:ROW_START+(6-n)*SLOT,w:B,h:B};
+    if(n===7)return{x:COL_L,y:by,w:B,h:B};
+    if(n===8)return{x:COL_CL,y:by,w:B,h:B};
+    if(n===9)return{x:COL_CR,y:by,w:B,h:B};
+    if(n===10)return{x:COL_R,y:by,w:B,h:B};
+    if(n>=11&&n<=16)return{x:COL_R,y:ROW_START+(n-11)*SLOT,w:B,h:B};
+    if(n>=17&&n<=22)return{x:COL_CR,y:ROW_START+(22-n)*SLOT,w:B,h:B};
+    if(n>=23&&n<=28)return{x:COL_CL,y:ROW_START+(n-23)*SLOT,w:B,h:B};
+    return{x:0,y:0,w:B,h:B};
+  }
+
+  function el(t,a){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);return e;}
+
+  var svg=document.getElementById('heroMap');
+  // Background
+  svg.appendChild(el('rect',{x:30,y:15,width:370,height:565,fill:'#faf9f7'}));
+  svg.appendChild(el('rect',{x:bx,y:by,width:bw,height:bh,fill:'#fff',rx:2}));
+  // Walls
+  var W=5,WC='#3a3a3a';
+  svg.appendChild(el('line',{x1:bx,y1:by,x2:bx+bw,y2:by,stroke:WC,'stroke-width':W,'stroke-linecap':'round'}));
+  svg.appendChild(el('line',{x1:bx,y1:by,x2:bx,y2:by+bh,stroke:WC,'stroke-width':W,'stroke-linecap':'round'}));
+  svg.appendChild(el('line',{x1:bx+bw,y1:by,x2:bx+bw,y2:by+bh,stroke:WC,'stroke-width':W,'stroke-linecap':'round'}));
+  var gap=100,wp=(bw-gap)/2;
+  svg.appendChild(el('line',{x1:bx,y1:by+bh,x2:bx+wp,y2:by+bh,stroke:WC,'stroke-width':W,'stroke-linecap':'round'}));
+  svg.appendChild(el('line',{x1:bx+bw-wp,y1:by+bh,x2:bx+bw,y2:by+bh,stroke:WC,'stroke-width':W,'stroke-linecap':'round'}));
+  // Entrance label
+  var et=document.createElementNS(NS,'text');
+  et.setAttribute('x',bx+bw/2);et.setAttribute('y',by+bh+25);et.setAttribute('text-anchor','middle');
+  et.setAttribute('font-family','Inter,system-ui');et.setAttribute('font-size','11');et.setAttribute('font-weight','700');
+  et.setAttribute('fill','#8B4789');et.setAttribute('letter-spacing','.08em');et.textContent='▲ ENTRANCE ▲';svg.appendChild(et);
+  // Dimensions
+  var d1=document.createElementNS(NS,'text');
+  d1.setAttribute('x',bx+bw/2);d1.setAttribute('y',by-10);d1.setAttribute('text-anchor','middle');
+  d1.setAttribute('font-family','Inter,system-ui');d1.setAttribute('font-size','10');d1.setAttribute('fill','#999');d1.setAttribute('font-weight','500');
+  d1.textContent="40'";svg.appendChild(d1);
+  var d2=document.createElementNS(NS,'text');
+  d2.setAttribute('x',bx-16);d2.setAttribute('y',by+bh/2);d2.setAttribute('text-anchor','middle');
+  d2.setAttribute('font-family','Inter,system-ui');d2.setAttribute('font-size','10');d2.setAttribute('fill','#999');d2.setAttribute('font-weight','500');
+  d2.setAttribute('transform','rotate(-90 '+(bx-16)+' '+(by+bh/2)+')');d2.textContent="70'";svg.appendChild(d2);
+  // Aisle labels
+  var alx1=(COL_L+B+COL_CL)/2,aly=ROW_START+3*SLOT;
+  var a1=document.createElementNS(NS,'text');
+  a1.setAttribute('x',alx1);a1.setAttribute('y',aly);a1.setAttribute('text-anchor','middle');
+  a1.setAttribute('font-family','Inter,system-ui');a1.setAttribute('font-size','9');a1.setAttribute('fill','#bbb');
+  a1.setAttribute('font-weight','500');a1.setAttribute('letter-spacing','.1em');
+  a1.setAttribute('transform','rotate(-90 '+alx1+' '+aly+')');a1.textContent='AISLE';svg.appendChild(a1);
+  var alx2=(COL_CR+B+COL_R)/2;
+  var a2=document.createElementNS(NS,'text');
+  a2.setAttribute('x',alx2);a2.setAttribute('y',aly);a2.setAttribute('text-anchor','middle');
+  a2.setAttribute('font-family','Inter,system-ui');a2.setAttribute('font-size','9');a2.setAttribute('fill','#bbb');
+  a2.setAttribute('font-weight','500');a2.setAttribute('letter-spacing','.1em');
+  a2.setAttribute('transform','rotate(-90 '+alx2+' '+aly+')');a2.textContent='AISLE';svg.appendChild(a2);
+  // Tooltip helpers
+  var tip=document.getElementById('heroTooltip');
+  function showTip(e,b){
+    var tier=TIERS[b.tier];
+    var sqft=(b.n===7||b.n===10)?'100 sq ft':'60 sq ft';
+    tip.innerHTML='<div style="font-weight:700;margin-bottom:2px">Booth '+b.n+'</div>'+
+      '<div style="margin-bottom:4px">'+sqft+'</div>'+
+      '<div style="margin-top:4px"><span style="display:inline-block;padding:2px 8px;border-radius:4px;font-size:.75rem;font-weight:700;background:'+tier.color+';color:#fff">'+tier.name+' · '+tier.price+'</span></div>'+
+      '<div style="font-size:.68rem;color:rgba(255,255,255,.5);margin-top:6px">Click for details →</div>';
+    tip.classList.add('show');tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-50)+'px';
+  }
+  function moveTip(e){tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-50)+'px';}
+  function hideTip(){tip.classList.remove('show');}
+
+  // Booths
+  booths.forEach(function(b){
+    var p=pos(b.n),tier=TIERS[b.tier],c=tier.color;
+    var r=el('rect',{x:p.x,y:p.y,width:p.w,height:p.h,rx:4,fill:c,cursor:'pointer',opacity:.9});
+    r.style.transition='all .2s';
+    r.addEventListener('mouseenter',function(e){r.setAttribute('opacity','1');showTip(e,b);});
+    r.addEventListener('mousemove',function(e){moveTip(e);});
+    r.addEventListener('mouseleave',function(){r.setAttribute('opacity','.9');hideTip();});
+    r.addEventListener('click',function(){
+      hideTip();
+      var isPremium=(b.n===7||b.n===10);
+      var sqft=isPremium?'100 sq ft':'60 sq ft';
+      var boothType=isPremium?'Premium Suite':'Standard Booth';
+      var tName=tier.name;
+      var tPrice=tier.price;
+      var tPeriod=tier.period;
+      var tColor=c;
+      document.getElementById('heroModalTitle').textContent='Booth '+b.n;
+      document.getElementById('heroModalSub').style.display='none';
+      var rows='';
+      rows+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:14px"><span style="color:#6b6b6b">Tier</span><span style="font-weight:700;color:'+tColor+'">'+boothType+'</span></div>';
+      rows+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:14px"><span style="color:#6b6b6b">Rate</span><span style="font-weight:700;color:#222">'+tPrice+'</span></div>';
+      rows+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0f0f0;font-size:14px"><span style="color:#6b6b6b">Size</span><span style="font-weight:700;color:#222">'+sqft+'</span></div>';
+      rows+='<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:14px"><span style="color:#6b6b6b">Billing</span><span style="font-weight:700;color:#222">'+tPeriod+'</span></div>';
+      document.getElementById('heroModalBody').innerHTML=rows;
+      var btn=document.getElementById('heroModalBtn');
+      btn.textContent='Request Booking';btn.href='booking.html?space='+b.n;btn.style.pointerEvents='auto';btn.style.opacity='1';
+      document.getElementById('heroModalOverlay').classList.add('open');
+    });
+    svg.appendChild(r);
+    var t=document.createElementNS(NS,'text');
+    t.setAttribute('x',p.x+p.w/2);t.setAttribute('y',p.y+p.h/2+1);
+    t.setAttribute('text-anchor','middle');t.setAttribute('dominant-baseline','central');
+    t.setAttribute('font-family','Inter,system-ui');t.setAttribute('font-size','14');
+    t.setAttribute('font-weight','700');t.setAttribute('fill','#fff');t.setAttribute('pointer-events','none');
+    t.textContent=b.n;svg.appendChild(t);
+  });
+})();
+</script>
+</body>
+</html>
