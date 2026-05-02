@@ -115,7 +115,7 @@
       <li><a href="calendar.html"   class="nav-link">Calendar</a></li>
       <li><a href="membership.html" class="nav-link">Membership</a></li>
       <li><a href="admin.html"      class="nav-link">Admin</a></li>
-      <li><a href="booking.html"    class="nav-link nav-cta">Book a Space</a></li>
+      <li><a href="apply.html"    class="nav-link nav-cta">Apply Now</a></li>
     </ul>
     <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -128,7 +128,7 @@
   <a href="calendar.html"   class="nav-link">Calendar</a>
   <a href="membership.html" class="nav-link">Membership</a>
   <a href="admin.html"      class="nav-link">Admin</a>
-  <a href="booking.html"    class="nav-link nav-cta">Book a Space</a>
+  <a href="apply.html"    class="nav-link nav-cta">Apply Now</a>
 </nav>
 
 <!-- ── Page Hero ───────────────────────────────────────────────────────────── -->
@@ -197,7 +197,7 @@
     <h2 style="margin-bottom:12px">Ready to Reserve Your Space?</h2>
     <p style="margin-bottom:28px">Choose your dates and booking type — the process takes under 2 minutes.</p>
     <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
-      <a href="booking.html" class="btn btn-primary btn-lg">Book a Space Now</a>
+      <a href="apply.html" class="btn btn-primary btn-lg">Apply for Space Now</a>
       <a href="calendar.html" class="btn btn-secondary btn-lg">Check Availability</a>
     </div>
   </div>
@@ -231,7 +231,7 @@
       <div class="footer-col">
         <h4>Booking</h4>
         <ul class="footer-links">
-          <li><a href="booking.html" class="footer-link">Book a Space</a></li>
+          <li><a href="apply.html" class="footer-link">Apply Now</a></li>
           <li><a href="membership.html" class="footer-link">Membership Plans</a></li>
           <li><a href="admin.html" class="footer-link">Staff Login</a></li>
         </ul>
@@ -263,7 +263,7 @@
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" id="modal-cancel">Close</button>
-      <a href="#" class="btn btn-primary" id="modal-book-btn">Book This Space</a>
+      <a href="#" class="btn btn-primary" id="modal-book-btn">Apply for This Space</a>
     </div>
   </div>
 </div>
@@ -387,7 +387,7 @@
     selectedSpaceId = id;
 
     document.getElementById('modal-title').textContent = space.name;
-    document.getElementById('modal-book-btn').href = `booking.html?spaceId=${id}`;
+    document.getElementById('modal-book-btn').href = `apply.html?spaceId=${id}`;
 
     const badgeClass = spaceBadgeClass(space.type);
     const amenitiesHtml = space.amenities.map(a =>

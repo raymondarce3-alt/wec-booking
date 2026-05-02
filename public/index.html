@@ -171,7 +171,7 @@
       <li><a href="calendar.html"   class="nav-link">Calendar</a></li>
       <li><a href="membership.html" class="nav-link">Membership</a></li>
       <li><a href="admin.html"      class="nav-link">Admin</a></li>
-      <li><a href="booking.html"    class="nav-link nav-cta">Book a Space</a></li>
+      <li><a href="apply.html"    class="nav-link nav-cta">Apply Now</a></li>
     </ul>
     <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -186,7 +186,7 @@
   <a href="calendar.html"   class="nav-link">Calendar</a>
   <a href="membership.html" class="nav-link">Membership</a>
   <a href="admin.html"      class="nav-link">Admin</a>
-  <a href="booking.html"    class="nav-link nav-cta">Book a Space</a>
+  <a href="apply.html"    class="nav-link nav-cta">Apply Now</a>
 </nav>
 
 <!-- ── Hero with Interactive Floor Plan ──────────────────────────────────── -->
@@ -203,7 +203,7 @@
         <p>The Women's Empowerment Center™ offers 29 professionally equipped booth and event spaces — designed to help women entrepreneurs launch, build, and scale their businesses.</p>
         <div class="hero-actions">
           <a href="spaces.html" class="btn btn-gold btn-xl">Browse Spaces</a>
-          <a href="booking.html" class="btn btn-secondary btn-xl" style="background:rgba(255,255,255,.15);color:white;border-color:rgba(255,255,255,.4)">Book Now</a>
+          <a href="apply.html" class="btn btn-secondary btn-xl" style="background:rgba(255,255,255,.15);color:white;border-color:rgba(255,255,255,.4)">Apply Now</a>
         </div>
         <div class="hero-stats">
           <div>
@@ -251,7 +251,7 @@
     </div>
     <div class="hero-modal-body" id="heroModalBody"></div>
     <div class="hero-modal-footer">
-      <a class="hero-modal-book" id="heroModalBtn" href="booking.html">Request Booking</a>
+      <a class="hero-modal-book" id="heroModalBtn" href="apply.html">Apply for This Space</a>
       <button class="hero-modal-close" onclick="document.getElementById('heroModalOverlay').classList.remove('open')">Close</button>
     </div>
   </div>
@@ -443,7 +443,7 @@
     <h2 id="cta-heading">Reserve Your Space Today</h2>
     <p>Join hundreds of women entrepreneurs who have grown their businesses at the Women's Empowerment Center™. Your journey starts with a single booking.</p>
     <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
-      <a href="booking.html" class="btn btn-gold btn-xl">Book Your Space Now</a>
+      <a href="apply.html" class="btn btn-gold btn-xl">Apply for Your Space</a>
       <a href="spaces.html" class="btn btn-xl" style="background:rgba(255,255,255,.15);color:white;border:2px solid rgba(255,255,255,.4)">Browse All Spaces</a>
     </div>
   </div>
@@ -477,7 +477,7 @@
       <div class="footer-col">
         <h4>Booking</h4>
         <ul class="footer-links">
-          <li><a href="booking.html" class="footer-link">Book a Space</a></li>
+          <li><a href="apply.html" class="footer-link">Apply Now</a></li>
           <li><a href="membership.html" class="footer-link">Membership Plans</a></li>
           <li><a href="admin.html" class="footer-link">Staff Login</a></li>
         </ul>
@@ -617,7 +617,7 @@
       rows+='<div style="display:flex;justify-content:space-between;padding:8px 0;font-size:14px"><span style="color:#6b6b6b">Billing</span><span style="font-weight:700;color:#222">'+tPeriod+'</span></div>';
       document.getElementById('heroModalBody').innerHTML=rows;
       var btn=document.getElementById('heroModalBtn');
-      btn.textContent='Request Booking';btn.href='booking.html?space='+b.n;btn.style.pointerEvents='auto';btn.style.opacity='1';
+      btn.textContent='Apply for This Space';btn.href='apply.html?space='+b.n;btn.style.pointerEvents='auto';btn.style.opacity='1';
       document.getElementById('heroModalOverlay').classList.add('open');
     });
     svg.appendChild(r);
