@@ -904,6 +904,28 @@ export default {
         return jsonResponse({ status: "ok", service: "WEC Booking API", timestamp: new Date().toISOString() }, 200, cors);
       }
 
+      // Serve static assets for non-API routes
+      if (env.ASSETS) {
+        return env.ASSETS.fetch(request);
+      }
+      
+      // Redirect all requests to the latest Pages deployment with pre-qualification flow
+      const redirectHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Women's Empowerment Center™ — Space Booking</title>
+  <meta http-equiv="refresh" content="0; url=https://ac2696d6.wec-booking-site-4mh.pages.dev${path}">
+</head>
+<body>
+  <p>Redirecting to <a href="https://ac2696d6.wec-booking-site-4mh.pages.dev${path}">Women's Empowerment Center Booking</a>...</p>
+</body>
+</html>`;
+      return new Response(redirectHtml, {
+        headers: { "Content-Type": "text/html", ...cors }
+      });
+      
       return errorResponse("Endpoint not found", 404, cors);
     } catch (err) {
       console.error("Worker error:", err);
